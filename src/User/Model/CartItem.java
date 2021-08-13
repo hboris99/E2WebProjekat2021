@@ -1,4 +1,5 @@
 package User.Model;
+import Restaurant.Model.Article;
 
 public class CartItem {
 
