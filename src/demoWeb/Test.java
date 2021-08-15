@@ -20,7 +20,7 @@ import io.jsonwebtoken.security.Keys;
 import spark.Session;
 public class Test {
 
-    private static Gson g = new Gson();
+    public static Gson gson = new Gson();
 
 
     public static void main(String[] args) throws Exception {
