@@ -1,5 +1,7 @@
 package User.Model;
 
+import Restaurant.Model.Restaurant;
+
 import java.util.Date;
 
 public class Manager extends User {
