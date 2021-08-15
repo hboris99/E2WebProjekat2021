@@ -11,6 +11,25 @@ public class User {
     private UserRoleType userRoleType;
     private Date dateOfBirth;
 
+    public Boolean getBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(Boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    private Boolean isBlocked;
+    private Boolean deleted;
+
     public User(String username, String password, String name, String surname, GenderType genderType, Date dateOfBirth, UserRoleType userRoleType) {
         this.username = username;
         this.password = password;
@@ -19,6 +38,8 @@ public class User {
         this.genderType = genderType;
         this.dateOfBirth = dateOfBirth;
         this.userRoleType = userRoleType;
+        this.isBlocked = false;
+        this.deleted = false;
     }
 
     public String getUsername() {
