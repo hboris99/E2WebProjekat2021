@@ -1,3 +1,5 @@
+package demoWeb;
+
 public interface IRepository<I> {
     I getID();
     void setID(I id);

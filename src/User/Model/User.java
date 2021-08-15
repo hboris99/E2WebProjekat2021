@@ -1,8 +1,11 @@
 package User.Model;
 
+import demoWeb.IRepository;
+
+import java.io.Serializable;
 import java.util.Date;
 
-public class User {
+public class User implements IRepository<String>, Serializable {
     private String username;
     private String password;
     private String name;
@@ -10,6 +13,15 @@ public class User {
     private GenderType genderType;
     private UserRoleType userRoleType;
     private Date dateOfBirth;
+    private String profileImage;
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public void setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
+    }
 
     public Boolean getBlocked() {
         return isBlocked;
@@ -38,6 +50,7 @@ public class User {
         this.genderType = genderType;
         this.dateOfBirth = dateOfBirth;
         this.userRoleType = userRoleType;
+        this.profileImage = "";
         this.isBlocked = false;
         this.deleted = false;
     }
@@ -97,4 +110,26 @@ public class User {
     public void setDateOfBirth(Date dateOfBirth) {
         this.dateOfBirth = dateOfBirth;
     }
+
+    @Override
+    public String getID() {
+        return username;
+    }
+
+    @Override
+    public void setID(String id) {
+        this.username = id;
+    }
+
+    @Override
+    public boolean isDeleted() {
+        return this.deleted;
+    }
+
+    @Override
+    public void setDeleted(boolean isDeleted) {
+        this.deleted = isDeleted;
+    }
+
+
 }
