@@ -11,5 +11,43 @@
 <script src="frontLib/vue.js"></script>
 <script src="frontLib/vue-router.js"></script>
 <script src="frontLib/axios.js"></script>
+<script src="frontLib/httpVueLoader.js"></script>
+
 <script src="frontLib/toast.js"></script></body>
+<script>
+    const routes = [
+        {
+            path: '/',
+            beforeEnter: (to, from, next) => {
+                if (localStorage.jws) {
+                    next({name: 'Home'});
+                } else {
+                    next({name: 'Home'});
+                }
+            },
+        },
+        {
+            path:'/home',
+            name: 'Home',
+            component: httpVueLoader('views/Home.vue'),
+        },
+        {
+            path: '/signin',
+            name: 'Signin',
+            component: httpVueLoader('views/Signin.vue'),
+        },
+
+
+    ];
+
+    const router = new VueRouter({
+        routes: routes,
+    })
+
+    new Vue({
+        el: '#app',
+        router: router,
+    }).$mount('#app')
+</script>
+
 </html>
