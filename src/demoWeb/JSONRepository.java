@@ -27,11 +27,16 @@ public class JSONRepository<T extends IRepository<I>, I> {
         Initialize();
     }
 
-    private void Initialize(){
-        File f = new File(file);
-
-        if(f.isFile()){
-            Save(new ArrayList<T>());
+    private void Initialize() {
+        try {
+            File f = new File(file);
+            f.createNewFile();
+            System.out.println("Napravljen fajl " + f.getName() + " Na putanji " + f.getAbsolutePath());
+            if (f.isFile()) {
+                Save(new ArrayList<T>());
+            }
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 

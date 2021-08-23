@@ -7,8 +7,16 @@ import static spark.Spark.webSocket;
 
 import java.io.File;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import User.Controller.UserController;
+import User.Model.GenderType;
+import User.Model.User;
+import User.Model.UserRoleType;
+import User.Repository.UserRepository;
+import User.Service.UserService;
 import com.google.gson.Gson;
 
 
@@ -26,11 +34,21 @@ public class Test {
     public static void main(String[] args) throws Exception {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
+        List<User> users = new ArrayList<User>();
+        Date dt = new Date(1999,8,23);
+        User u1 = new User("boki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Manager );
+        User u2= new User("zoki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Manager );
+        User u3 = new User("marina","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Manager );
 
 
-        get("/rest/demo/test", (req, res) -> {
-            return "RADI BRE";
-        });
+
+        UserRepository userRepository = new UserRepository("users.json");
+        userRepository.Create(u1);
+        userRepository.Create(u2);
+        userRepository.Create(u3);
+        UserService userService = new UserService(userRepository);
+        UserController userController = new UserController(userService);
+
     }
 
 }
