@@ -15,6 +15,8 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+
+
     public Optional<String> loginUser(LogInReq req){
         Optional<User> user = userRepository.get(req.getUsername());
         if(!user.isPresent() || !user.get().getPassword().equals(req.getPassword())){
