@@ -29,7 +29,7 @@
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
             <li><router-link class="dropdown-item" href="#" to="/userinfo">Profile</router-link></li>
             <li><router-link class="dropdown-item" v-if="role== 'REGULAR'" to="/cart">Cart</router-link></li>
-            <li><router-link class="dropdown-item" to="/orders">Orders</li>
+            <li><router-link class="dropdown-item" to="/orders">Orders </router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
           </ul>

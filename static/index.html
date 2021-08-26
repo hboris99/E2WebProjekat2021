@@ -55,6 +55,53 @@
             name: 'Signin',
             component: httpVueLoader('views/Signin.vue'),
         },
+        {
+            path: '/userinfo',
+            name: 'UserInfo',
+            component: httpVueLoader('views/UserInfo.vue'),
+        },
+        {
+            path:'/admin',
+            component: httpVueLoader('views/Admin.vue'),
+            children:[
+                {
+                    path:'',
+                    name: 'UsersViewAdmin',
+                    component: httpVueLoader('views/UsersViewAdmin'),
+                },
+                {
+                  path: 'newrestaurant',
+                  name: 'NewRestaurant',
+                  component:  httpVueLoader('views/NewRestaurant.vue'),
+                },
+                {
+                    path: 'newuser',
+                    name: 'NewUser',
+                    component: httpVueLoader('views/NewUser.vue'),
+                },
+            ],
+        },
+        {
+            path:'/manager',
+            component: httpVueLoader('views/Manager.vue'),
+            children:[
+                {
+                    path:'',
+                    name: 'ManagerRestaurant',
+                    component: httpVueLoader('views/ManagerRestaurant'),
+                },
+                {
+                    path: 'restaurantorders',
+                    name: 'RestaurantOrders',
+                    component:  httpVueLoader('views/RestaurantOrders.vue'),
+                },
+                {
+                    path: 'customers',
+                    name: 'Customers',
+                    component: httpVueLoader('views/Customers.vue'),
+                },
+            ],
+        },
 
 
 
