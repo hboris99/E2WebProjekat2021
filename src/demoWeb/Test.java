@@ -44,8 +44,6 @@ public class Test {
 
         UserRepository userRepository = new UserRepository("users.json");
         userRepository.Create(u1);
-        userRepository.Create(u2);
-        userRepository.Create(u3);
         UserService userService = new UserService(userRepository);
         UserController userController = new UserController(userService);
 

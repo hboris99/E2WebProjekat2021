@@ -1,4 +1,5 @@
 <template>
+  <div id="navmain">
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container-fluid">
       <a class="navbar-brand" href="#/home">Runeterra's Food Emporium</a>
@@ -27,7 +28,7 @@
             <i  class="far fa-user fa-2x"></i>
           </router-link>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-            <li><router-link class="dropdown-item" href="#" to="/userinfo">Profile</router-link></li>
+            <li><router-link class="dropdown-item" href="#" to="/profile">Profile</router-link></li>
             <li><router-link class="dropdown-item" v-if="role== 'REGULAR'" to="/cart">Cart</router-link></li>
             <li><router-link class="dropdown-item" to="/orders">Orders </router-link></li>
             <li><hr class="dropdown-divider"></li>
@@ -38,6 +39,7 @@
       </div>
     </div>
   </nav>
+  </div>
 </template>
 
 <script>

@@ -26,4 +26,9 @@ public class UserService {
         return Optional.of(JSONWebTokenUtil.generateJws(user.get()));
 
     }
+
+    public Optional<User> getByUsername(String username) {
+        System.out.println(userRepository.get(username));
+        return userRepository.get(username);
+    }
 }
