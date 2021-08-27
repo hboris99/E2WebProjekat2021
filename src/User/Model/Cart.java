@@ -14,6 +14,9 @@ public class Cart {
         this.buyer = buyer;
         this.price = 0.0;
     }
+    public Cart (){
+
+    }
 
     public List<CartItem> getCartItemsList() {
         return cartItemsList;

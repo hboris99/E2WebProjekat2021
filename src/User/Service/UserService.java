@@ -1,10 +1,16 @@
 package User.Service;
 
 import User.DTO.LogInReq;
-import User.Model.User;
+import User.DTO.RegisterReq;
+import User.Model.*;
 import User.Repository.UserRepository;
 import demoWeb.JSONWebTokenUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.Optional;
 
 public class UserService {
@@ -23,5 +29,13 @@ public class UserService {
 
         return Optional.of(JSONWebTokenUtil.generateJws(user.get()));
 
+    }
+    public boolean registerUser(RegisterReq req) throws ParseException {
+        Optional<User> reg = userRepository.get(req.getUsername());
+        if (reg.isPresent()) {
+            return false;
+        }
+        Buyer newBuyer = new Buyer(req.getUsername(),req.getPassword(),req.getName(), req.getSurname(),req.getGender(),req.getBirthDate());
+        return userRepository.Create(newBuyer);
     }
 }
