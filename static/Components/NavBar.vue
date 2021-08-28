@@ -9,13 +9,27 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#/restaurants">Restaurants</a>
+            <a class="nav-link active" aria-current="page" href="#">Restaurants</a>
           </li>
+          <div v-if="role === 'Admin'" class="navbar-nav me-auto mb-2 mb-lg-0 ">
+            <li class="nav-item">
+              <router-link class="nav-link active"  to="/admin">All users</router-link>
+            </li>
+          <li class="nav-item">
+            <router-link class="nav-link active"  to="/admin/newuser">New user</router-link>
+          </li>
+          <li class="nav-item">
+            <router-link class="nav-link active"  to="/admin/newrestaurant">New restaurant</router-link>
+          </li>
+          </div>
+
         </ul>
+
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
+
         <div v-if="!jws">
           <button class="btn btn-outline-success" type="submit" @click="$router.push('/signin')">
             Sign Up
@@ -29,7 +43,7 @@
           </router-link>
           <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
             <li><router-link class="dropdown-item" href="#" to="/profile">Profile</router-link></li>
-            <li><router-link class="dropdown-item" v-if="role== 'REGULAR'" to="/cart">Cart</router-link></li>
+            <li><router-link class="dropdown-item" v-if="role === 'Buyer'" to="/cart">Cart</router-link></li>
             <li><router-link class="dropdown-item" to="/orders">Orders </router-link></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#" @click="logout">Logout</a></li>
@@ -48,16 +62,18 @@ module.exports=
       data: function (){
         return{
           role: '',
+          componentKey:0,
         }
 
 
         },
       methods:{
+
         getRole: function (){
           if(!localStorage.jws){
             return
           }
-          axios.get('/user/role', {headers: {'Authorization': 'Bearer' + localStorage.jws}}).then(r => this.role = this.data);
+          axios.get('/user/role', {headers: {'Authorization': 'Bearer' + localStorage.jws}}).then(r => this.role = r.data);
         },
         logout: function () {
           localStorage.removeItem('jws');

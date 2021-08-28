@@ -200,7 +200,7 @@
   </div>
 </template>
 
-<style scoped>
+<style >
 #navbarDropdown{
   color: chocolate;
 }

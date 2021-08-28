@@ -29,11 +29,11 @@
                 if (localStorage.jws) {
                     axios.get('/user/role', {headers:{'Authorization': 'Bearer' + localStorage.jws}})
                     .then(r => {
-                        if(r.data == 'REGULAR'){
+                        if(r.data == 'Regular'){
                             next({name: 'Home'});
-                        }else if(r.data == 'ADMIN'){
+                        }else if(r.data == 'Admin'){
                             next({path: '/admin'});
-                        }else if(r.data == 'MANAGER'){
+                        }else if(r.data == 'Manager'){
                             next({path: '/manager'});
                         }else{
                             next({name: 'Home'});
@@ -67,7 +67,7 @@
                 {
                     path:'',
                     name: 'UsersViewAdmin',
-                    component: httpVueLoader('views/UsersViewAdmin'),
+                    component: httpVueLoader('views/UsersViewAdmin.vue'),
                 },
                 {
                   path: 'newrestaurant',
