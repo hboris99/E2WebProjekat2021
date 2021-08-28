@@ -38,29 +38,13 @@ public class Test {
         List<User> users = new ArrayList<User>();
         Date dt = new Date(1999,8,23);
         User u1 = new User("boki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Admin);
-        User u2= new User("zoki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Manager );
-        User u3 = new User("marina","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u4 = new User("s","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u5 = new User("g","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u6 = new User("gas","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u7 = new User("das","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u8 = new User("dgafas","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u9 = new User("gdasfda","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
-        User u10 = new User("hasfafdas","boki","boki","boki", GenderType.FEMALE,dt, UserRoleType.Manager );
+
 
 
 
         UserRepository userRepository = new UserRepository("users.json");
         userRepository.Create(u1);
-        userRepository.Create(u2);
-        userRepository.Create(u3);
-        userRepository.Create(u4);
-        userRepository.Create(u5);
-        userRepository.Create(u6);
-        userRepository.Create(u7);
-        userRepository.Create(u8);
-        userRepository.Create(u9);
-        userRepository.Create(u10);
+
 
 
         UserService userService = new UserService(userRepository);
