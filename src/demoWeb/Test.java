@@ -21,6 +21,7 @@ import User.Service.UserService;
 import com.google.gson.Gson;
 
 
+import com.google.gson.GsonBuilder;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
@@ -29,7 +30,7 @@ import io.jsonwebtoken.security.Keys;
 import spark.Session;
 public class Test {
 
-    public static Gson gson = new Gson();
+    public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
 
 
     public static void main(String[] args) throws Exception {
@@ -43,7 +44,6 @@ public class Test {
 
 
         UserRepository userRepository = new UserRepository("users.json");
-        userRepository.Create(u1);
 
 
 

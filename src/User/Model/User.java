@@ -11,7 +11,7 @@ public class User implements IRepository<String>, Serializable {
     private String name;
     private String surname;
     private GenderType genderType;
-    private UserRoleType userRoleType;
+    public UserRoleType userRoleType;
     private Date dateOfBirth;
     private String profileImage;
 
