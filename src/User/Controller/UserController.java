@@ -2,6 +2,8 @@ package User.Controller;
 
 import User.DTO.LogInReq;
 import User.Model.User;
+import User.DTO.RegisterReq;
+
 import User.Service.UserService;
 import demoWeb.JSONWebTokenUtil;
 import spark.Request;
@@ -49,5 +51,18 @@ public class UserController {
                 return internal(res);
             }
         });
+
+        post("/user/register", (req, res) -> {
+            try {
+                if(userService.registerUser(gson.fromJson(req.body(), RegisterReq.class))) {
+                    return ok("Registered", res);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                return internal(res);
+            }
+            return badRequest("Failed to register", res);
+        });
+
     }
 }

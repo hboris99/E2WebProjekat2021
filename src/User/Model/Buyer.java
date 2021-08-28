@@ -1,5 +1,6 @@
 package User.Model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,6 +22,17 @@ public class Buyer extends User {
         this.points = points;
         this.buyerType = buyerType;
     }
+
+    public Buyer(String username, String password, String name, String surname, GenderType genderType, Date dateOfBirth) {
+        super(username, password, name, surname, genderType, dateOfBirth, UserRoleType.Buyer);
+        this.points = 0.0;
+        this.buyerType = new BuyerType(BuyerTypeRank.Bronze,0,3000);
+        this.cart = new Cart();
+        orderList = new ArrayList<String>();
+
+    }
+
+
 
     public List<String> getOrderList() {
         return orderList;
