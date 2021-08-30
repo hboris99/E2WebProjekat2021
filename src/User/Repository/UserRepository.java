@@ -9,5 +9,7 @@ import java.util.List;
 public class UserRepository extends JSONRepository<User,String>{
     public UserRepository(String file) {
         super(file,new TypeToken<List<User>>(){}.getType());
+        List<User> users = getAll();
+
     }
 }

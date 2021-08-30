@@ -25,19 +25,19 @@ public class JSONRepository<T extends IRepository<I>, I> {
         this.file = file;
         this.type = type;
         Initialize();
+        List<T> users = getAll();
     }
 
     private void Initialize() {
-        try {
+
             File f = new File(file);
-            f.createNewFile();
-            System.out.println("Napravljen fajl " + f.getName() + " Na putanji " + f.getAbsolutePath());
-            if (f.isFile()) {
+            if (!f.isFile()) {
                 Save(new ArrayList<T>());
+
             }
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+            List<T> users = getAll();
+
+
     }
 
 
@@ -98,7 +98,21 @@ public class JSONRepository<T extends IRepository<I>, I> {
         return allEntities == null ? Collections.emptyList() :allEntities;
     }
 
-    private void Save(List<T> entities){
+    public void LoadAdminUsers(String adminFile){
+        List<T> adllAdmins = null;
+
+        try(FileReader fileReader = new FileReader(adminFile);
+            JsonReader jsonReader = new JsonReader(fileReader)) {
+            jsonReader.setLenient(true);
+            adllAdmins = gson.fromJson(jsonReader, type);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Save(adllAdmins);
+    }
+
+    public void Save(List<T> entities){
         try(FileWriter fileWriter = new FileWriter(file)){
             gson.toJson(entities, type, fileWriter);
         }catch (IOException e){

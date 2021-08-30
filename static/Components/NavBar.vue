@@ -1,4 +1,4 @@
-<template>
+<template ref="navbar">
   <div id="navmain">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
@@ -26,8 +26,8 @@
           </ul>
 
           <form class="d-flex">
-            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-            <button class="btn btn-outline-success" type="submit">Search</button>
+            <input class="form-control me-2" type="search" placeholder="Search" :value="value" @input="onInput" aria-label="Search">
+            <button class="btn btn-outline-success" type="submit" >Search</button>
           </form>
 
           <div v-if="!jws">
@@ -53,12 +53,14 @@
         </div>
       </div>
     </nav>
+
   </div>
 </template>
 
 <script>
 module.exports=
     {
+
       data: function (){
         return{
           role: '',
@@ -67,8 +69,16 @@ module.exports=
 
 
       },
+      props: {
+        value: {
+          type: [String],
+          default: ''
+        }
+      },
       methods:{
-
+        onInput: function (e){
+          this.$emit('on-input', e.target.value)
+        },
         getRole: function (){
           if(!localStorage.jws){
             return
@@ -82,6 +92,7 @@ module.exports=
 
       },
       computed:{
+
         jws: function (){
           return localStorage.jws;
         }

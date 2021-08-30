@@ -1,6 +1,6 @@
 <template>
   <div>
-      <custom-nav-bar>
+      <custom-nav-bar >
 
       </custom-nav-bar>
     <div id="main-view-area">

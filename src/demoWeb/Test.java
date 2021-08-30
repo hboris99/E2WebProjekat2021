@@ -36,7 +36,6 @@ public class Test {
     public static void main(String[] args) throws Exception {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
-        List<User> users = new ArrayList<User>();
         Date dt = new Date(1999,8,23);
         User u1 = new User("boki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Admin);
 
@@ -45,12 +44,12 @@ public class Test {
 
         UserRepository userRepository = new UserRepository("users.json");
 
-
+        //userRepository.LoadAdminUsers("adminUsers.json");
 
         UserService userService = new UserService(userRepository);
         AdminController adminController = new AdminController(userService);
         UserController userController = new UserController(userService);
-
+       
     }
 
 }
