@@ -65,4 +65,20 @@ public class UserService {
         Buyer newBuyer = new Buyer(req.getUsername(),req.getPassword(),req.getName(), req.getSurname(),req.getGender(),req.getBirthDate());
         return userRepository.Create(newBuyer);
     }
+
+    public boolean registerDeliverer(RegisterReq req) {
+        if(getByUsername(req.getUsername()).isPresent()){
+            return false;
+        }
+        Deliverer deliverer = new Deliverer(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
+        return userRepository.Create(deliverer);
+    }
+
+    public boolean registerManager(RegisterReq req) {
+        if(getByUsername(req.getUsername()).isPresent()){
+            return false;
+        }
+        Manager manager = new Manager(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
+        return userRepository.Create(manager);
+    }
 }

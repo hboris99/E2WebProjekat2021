@@ -4,6 +4,23 @@
 
   </custom-nav-bar>
   <div id="user-view-main">
+    <div id="sort-container">
+      <p @click="sort('username')">Username<span v-if="sortBy == 'username'" v-html="sortSymbol"></span></p>
+      <p @click="sort('firstName')">First name<span v-if="sortBy == 'firstName'" v-html="sortSymbol"></span></p>
+      <p @click="sort('lastName')">Last name<span v-if="sortBy == 'lastName'" v-html="sortSymbol"></span></p>
+      <p @click="sort('points')">Points<span v-if="sortBy == 'points'" v-html="sortSymbol"></span></p>
+    </div>
+    <div class="filter-container">
+      <select @change="filterByRole" v-model="selectedType">
+        <option value="">Select type</option>
+        <option v-for="type in types" :key="type" :value="type">{{type}}</option>
+      </select>
+      <select v-model="selectedRole">
+        <option value="">Select role</option>
+        <option v-for="role in roles" :key="role" :value="role">{{role}}</option>
+      </select>
+    </div>
+    <button @click="selectedroleshow"> lick me</button>
   <div class="row row-cols-1 row-cols-5 g-4">
     <div class="col" v-for="user in filteredUsers">
       <div class="card" >
@@ -34,13 +51,28 @@ module.exports =
           profilepicture: '',
           queryparamusers:'',
           vCode: '',
+          selectedType: '',
+          selectedRole: '',
+          sortBy: 'username',
+          sortDirection: 'asc',
+          roles: ["ADMIN", "MANAGER", "REGULAR"],
+          types: ["BRONZE", "SILVER", "GOLD"],
         }
       },
       methods:{
+        selectedroleshow: function (event){
+          console.log(event.target.value)
+        },
         handleInput(value){
           this.vCode = value;
           console.log(value);
 
+        },
+        sort: function(s) {
+          if(this.sortBy == s) {
+            this.sortDirection = this.sortDirection == 'asc' ? 'desc' : 'asc';
+          }
+          this.sortBy = s;
         },
         getUsers: function (){
           if(!localStorage.jws){
@@ -52,7 +84,6 @@ module.exports =
           .then(r =>
               {
                 let users = r.data;
-                console.log(this.queryparamusers);
                 users.forEach(u =>
                 {
                   if(u.genderType == 'MALE'){
@@ -69,7 +100,6 @@ module.exports =
                       u.profileImage = r.data.results[0].picture.large;
                     });
                   }
-                  console.log(u.profileImage)
 
                   if(!u.points){
                     u.points = 0.0;
@@ -82,20 +112,22 @@ module.exports =
               }
           ).catch(r => console.log(r));
         },
-      },computed:{
-        filteredUsers: function (){
+        filterByRole: function (){
+        console.log(this.selectedRole)
+        }
+      },computed: {
+        filteredUsers: function () {
+          let res = [...this.users];
+
           let queryParam = this.vCode.split(' ')
-          console.log(queryParam.length)
-          console.log(queryParam[1])
-          console.log(queryParam[2])
-          if(queryParam.length == 1) {
-            return this.users.filter((user) => {
+          if (queryParam.length == 1) {
+            return res.filter((user) => {
               return user.username.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                     user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                    user.surname.toLowerCase().match(queryParam[0].toLowerCase());
+                  user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
+                  user.surname.toLowerCase().match(queryParam[0].toLowerCase());
             });
-          }else if(queryParam.length == 2){
-            return this.users.filter((user) => {
+          } else if (queryParam.length == 2) {
+            return res.filter((user) => {
               return user.username.toLowerCase().match(queryParam[0].toLowerCase()) ||
                   user.username.toLowerCase().match(queryParam[1].toLowerCase()) ||
                   user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
@@ -104,21 +136,31 @@ module.exports =
                   user.surname.toLowerCase().match(queryParam[1].toLowerCase())
                   ;
             });
-          }else if(queryParam.length == 3){
-            return this.users.filter((user) => {
+          } else if (queryParam.length == 3) {
+            return res.filter((user) => {
               return user.username.toLowerCase().match(queryParam[0].toLowerCase()) ||
                   user.username.toLowerCase().match(queryParam[1].toLowerCase()) ||
                   user.username.toLowerCase().match(queryParam[2].toLowerCase()) ||
-              user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
-              user.surname.toLowerCase().match(queryParam[0].toLowerCase()) ||
-              user.name.toLowerCase().match(queryParam[1].toLowerCase()) ||
-              user.surname.toLowerCase().match(queryParam[1].toLowerCase()) ||
-              user.name.toLowerCase().match(queryParam[2].toLowerCase()) ||
-              user.surname.toLowerCase().match(queryParam[2].toLowerCase())
-              ;
+                  user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
+                  user.surname.toLowerCase().match(queryParam[0].toLowerCase()) ||
+                  user.name.toLowerCase().match(queryParam[1].toLowerCase()) ||
+                  user.surname.toLowerCase().match(queryParam[1].toLowerCase()) ||
+                  user.name.toLowerCase().match(queryParam[2].toLowerCase()) ||
+                  user.surname.toLowerCase().match(queryParam[2].toLowerCase())
+                  ;
             });
           }
-        }
+          if(selectedRole == 'ADMIN'){
+            return res.filter((user) => {
+              console.log(user.userRoleType)
+              return user.userRoleType.match('ADMIN');
+            })
+          }
+
+        },
+        sortSymbol: function() {
+          return this.sortDirection=='asc' ? '&#x25B2;' : '&#x25BC;'
+        },
       },
       mounted(){
         this.getUsers();

@@ -2,8 +2,10 @@
 <div>
   <custom-nav-bar>
   </custom-nav-bar>
+  <div id="mainwindow">
+  <div id="newuserreg">
   <div class="d-flex justify-content-between">
-    <form class="row g-3 needs-validation" @submit="addUser" id="sign-in-form" novalidate>
+    <form class="row g-3 needs-validation" @submit="newUser" id="sign-in-form" novalidate>
       <div class="form-floating">
         <input class="form-control" placeholder="Username" id="form-name-input" v-model="username" type="text">
         <label for="form-name-input">Username</label>
@@ -11,39 +13,99 @@
           Please enter your username.
         </div>
       </div>
-      <div class="form-floating input-group mb-3">
-        <input class="form-control" id="form-pass-input" v-model="password" :type="type" id="password" placeholder="Enter your password" autocomplete="off">
-        <div class="input-group-append">
-          <button class="btn btn-primary h-100" type="button" @click="showPassword()"><i :class="icon_class" aria-hidden="true"></i></button>
-        </div>
-        <label for="form-pass-input">Password</label>
-        <div class="invalid-feedback">
-          Please enter your password.
-        </div>
+      <div class="form-floating  mb-3">
+        <input class="form-control" id="form-pass-input" v-model="password"  id="password" placeholder="Password" autocomplete="off">
+        <label for="Password">password</label>
       </div>
-      <p class="text-muted">
-        Don't have an account? Register <a href="#" class="text-reset">here.</a>
-      </p>
 
-      <input class="btn btn-primary" type="submit" value="Sign In">
+
+      <div class="form-floating">
+        <input class="form-control" id="fnameform" v-model="name" placeholder="First name">
+        <label for="fnameform">First name</label>
+      </div>
+      <div class="form-floating ">
+        <input class="form-control" id="lnameform" v-model="surname" placeholder="First name">
+        <label for="lnameform">Last name</label>
+      </div>
+        <select clas="form-select form-select-lg" v-model="userRoleType">
+          <option :value="null" disabled hidden>Select userRoleType</option>
+          <option value="MANAGER">Manager</option>
+          <option value="DELIVERER">Deliverer</option>
+        </select>
+
+        <select clas="form-select form-select-lg" v-model="gender">
+          <option selected>Select gender</option>
+          <option value="MALE">Male</option>
+          <option value="FEMALE">Female</option>
+          <option value="OTHER">Other</option>
+        </select>
+
+      <div class="form-floating input-group">
+        <input type="date" v-model="birthDate" :max="new Date()">
+      </div>
+
+
+      <input class="btn btn-primary" type="submit" value="Create new User">
 
     </form>
   </div>
+</div>
+</div>
 </div>
 </template>
 
 <script>
 module.exports= {
-  data() {
+  data: function() {
     return{
-
+      username: '',
+      password: '',
+      name: '',
+      surname: '',
+      userRoleType: '',
+      gender: '',
+      birthDate: '',
     }
   },
   methods: {
-    addUser: function (){
+    newUser: function (){
+        if(!localStorage.jws){
+          this.$router.push('/');
+          return;
+        }
+        let request = {
+          username: this.username,
+          password: this.password,
+          name: this.name,
+          surname: this.surname,
+          gender: this.gender,
+          birthDate: this.birthDate,
+        }
+        console.log(request)
+        let url = this.userRoleType == 'MANAGER' ? '/admin/newmanager' : '/admin/newdeliverer';
+        console.log(url);
+        axios.post(url, request, {headers:{'Authorization': 'Bearer' + localStorage.jws}}).then(
+            () => alert('User registered')).catch(r=>{
+              console.log(r);
+            });
 
-    }
-  }
+    },
+  },
 }
 </script>
-
+<style scoped>
+#mainwindow{
+  display: grid;
+  place-items: center;
+  height: 100vh;
+}
+#newuserreg{
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  border: 1px solid rgba(103, 5, 2, 0.67);
+  border-radius: 10px;
+  width: 500px;
+  height: 510px
+}
+</style>

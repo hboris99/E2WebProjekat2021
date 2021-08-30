@@ -8,10 +8,9 @@ public class Manager extends User {
     private Restaurant restaurant;
 
     public Manager(String username, String password, String name,
-                   String surname, GenderType genderType, Date dateOfBirth,
-                   Restaurant restaurant) {
+                   String surname, GenderType genderType, Date dateOfBirth
+                   ) {
         super(username, password, name, surname, genderType, dateOfBirth, UserRoleType.Manager);
-        this.restaurant = restaurant;
     }
 
     public Restaurant getRestaurant() {
