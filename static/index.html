@@ -28,7 +28,7 @@
         {
             path: '/',
             beforeEnter: (to, from, next) => {
-                if (localStorage.jws) {
+                if(localStorage.jws) {
                     axios.get('/user/role', {headers:{'Authorization': 'Bearer' + localStorage.jws}})
                     .then(r => {
                         if(r.data == 'Regular'){
@@ -40,7 +40,7 @@
                         }else{
                             next({name: 'Home'});
                         }
-                    }).catch( ()=> next({name:'Home'}));
+                    }).catch(()=> next({name:'Home'}));
                     next({name: 'Home'});
                 } else {
                     next({name: 'Home'});

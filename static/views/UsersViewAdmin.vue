@@ -5,13 +5,13 @@
   </custom-nav-bar>
   <div id="user-view-main">
     <div id="sort-container">
-      <p @click="sort('username')">Username<span v-if="sortBy == 'username'" v-html="sortSymbol"></span></p>
-      <p @click="sort('firstName')">First name<span v-if="sortBy == 'firstName'" v-html="sortSymbol"></span></p>
-      <p @click="sort('lastName')">Last name<span v-if="sortBy == 'lastName'" v-html="sortSymbol"></span></p>
-      <p @click="sort('points')">Points<span v-if="sortBy == 'points'" v-html="sortSymbol"></span></p>
+      <p>Username<span v-if="sortBy == 'username'" ></span></p>
+      <p>First name<span v-if="sortBy == 'firstName'" ></span></p>
+      <p >Last name<span v-if="sortBy == 'lastName'"></span></p>
+      <p >Points<span v-if="sortBy == 'points'" ></span></p>
     </div>
     <div class="filter-container">
-      <select @change="filterByRole" v-model="selectedType">
+      <select  v-model="selectedType">
         <option value="">Select type</option>
         <option v-for="type in types" :key="type" :value="type">{{type}}</option>
       </select>
@@ -20,11 +20,9 @@
         <option v-for="role in roles" :key="role" :value="role">{{role}}</option>
       </select>
     </div>
-    <button @click="selectedroleshow"> lick me</button>
   <div class="row row-cols-1 row-cols-5 g-4">
     <div class="col" v-for="user in filteredUsers">
       <div class="card" >
-        <router-link id="link" to="/home + {{user.name}}">
         <img v-bind:src="user.profileImage" class="card-img-top h-100 w-100" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{user.username}}</h5>
@@ -60,19 +58,95 @@ module.exports =
         }
       },
       methods:{
-        selectedroleshow: function (event){
-          console.log(event.target.value)
-        },
+
         handleInput(value){
           this.vCode = value;
-          console.log(value);
 
         },
-        sort: function(s) {
-          if(this.sortBy == s) {
-            this.sortDirection = this.sortDirection == 'asc' ? 'desc' : 'asc';
+        getFilteredByName: function (users, params){
+          let filteredByName = [];
+          if(params[0] === ''  || params[0] == ' '){
+            filteredByName =  users;
+          }else if(params[1] == null || params[1] == ' '){
+            filteredByName =  users.filter((user) => user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1);
+          }else if(params[2] == null || params[2] == ' '){
+            filteredByName =  users.filter((user) =>
+              user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+              user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1
+            );
+          }else{
+
+            filteredByName =  users.filter((user) =>
+
+              user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+              user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
+              user.name.toLowerCase().indexOf(params[2].toLowerCase()) > -1
+
+            );
           }
-          this.sortBy = s;
+          if(filteredByName === undefined || filteredByName.length == 0){
+            return users;
+          }else{
+            return filteredByName;
+          }
+
+        },
+        getFilteredBySurname: function (users, params){
+          let filteredBySurname = [];
+
+          if(params[0] === ''  || params[0] == ' '){
+            filteredBySurname = users;
+          }else if(params[1] == null || params[1] == ' '){
+            filteredBySurname =  users.filter((user) => user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1);
+          }else if(params[2] == null || params[2] == ' '){
+            filteredBySurname =  users.filter((user) =>
+                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1
+            );
+          }else {
+
+            filteredBySurname =  users.filter((user) =>
+
+                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
+                user.surname.toLowerCase().indexOf(params[2].toLowerCase()) > -1
+
+            );
+          }if(filteredBySurname === undefined || filteredBySurname.length == 0){
+            return users;
+          }else{
+            return filteredBySurname;
+          }
+
+        },
+        getFilteredByUsername: function (users, params){
+          let array  = [];
+          if(params[0] === ''  || params[0] == ' '){
+            array = users;
+          }else if(params[1] == null || params[1] == ' '){
+            array =  users.filter((user) => user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1);
+          }else if(params[2] == null || params[2] == ' '){
+            array =  users.filter((user) =>
+                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1
+            );
+          }else {
+
+
+            array =  users.filter((user) =>
+
+                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
+                user.username.toLowerCase().indexOf(params[2].toLowerCase()) > -1
+
+            );
+          }if(array === undefined || array.length == 0){
+            return users;
+          }else{
+            return array
+
+          }
+
         },
         getUsers: function (){
           if(!localStorage.jws){
@@ -112,55 +186,13 @@ module.exports =
               }
           ).catch(r => console.log(r));
         },
-        filterByRole: function (){
-        console.log(this.selectedRole)
+        },computed: {
+        filteredUsers: function (){
+          
+
+          return this.getFilteredByUsername(this.getFilteredBySurname(this.getFilteredByName(this.users, this.vCode.split(' ')), this.vCode.split(' ')),this.vCode.split(' '))
         }
-      },computed: {
-        filteredUsers: function () {
-          let res = [...this.users];
 
-          let queryParam = this.vCode.split(' ')
-          if (queryParam.length == 1) {
-            return res.filter((user) => {
-              return user.username.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.surname.toLowerCase().match(queryParam[0].toLowerCase());
-            });
-          } else if (queryParam.length == 2) {
-            return res.filter((user) => {
-              return user.username.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.username.toLowerCase().match(queryParam[1].toLowerCase()) ||
-                  user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.surname.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.name.toLowerCase().match(queryParam[1].toLowerCase()) ||
-                  user.surname.toLowerCase().match(queryParam[1].toLowerCase())
-                  ;
-            });
-          } else if (queryParam.length == 3) {
-            return res.filter((user) => {
-              return user.username.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.username.toLowerCase().match(queryParam[1].toLowerCase()) ||
-                  user.username.toLowerCase().match(queryParam[2].toLowerCase()) ||
-                  user.name.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.surname.toLowerCase().match(queryParam[0].toLowerCase()) ||
-                  user.name.toLowerCase().match(queryParam[1].toLowerCase()) ||
-                  user.surname.toLowerCase().match(queryParam[1].toLowerCase()) ||
-                  user.name.toLowerCase().match(queryParam[2].toLowerCase()) ||
-                  user.surname.toLowerCase().match(queryParam[2].toLowerCase())
-                  ;
-            });
-          }
-          if(selectedRole == 'ADMIN'){
-            return res.filter((user) => {
-              console.log(user.userRoleType)
-              return user.userRoleType.match('ADMIN');
-            })
-          }
-
-        },
-        sortSymbol: function() {
-          return this.sortDirection=='asc' ? '&#x25B2;' : '&#x25BC;'
-        },
       },
       mounted(){
         this.getUsers();
