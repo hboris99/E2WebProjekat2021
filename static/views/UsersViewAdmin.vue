@@ -3,24 +3,35 @@
   <custom-nav-bar :value="vCode" @on-input="handleInput">
 
   </custom-nav-bar>
-  <div id="user-view-main">
-    <div id="sort-container">
-      <p>Username<span v-if="sortBy == 'username'" ></span></p>
-      <p>First name<span v-if="sortBy == 'firstName'" ></span></p>
-      <p >Last name<span v-if="sortBy == 'lastName'"></span></p>
-      <p >Points<span v-if="sortBy == 'points'" ></span></p>
+  <div class="container">
+    <div class="row g-5 align-items-end">
+      <div class="col">
+        <select  v-model="selectedType">
+          <option value="">Select type</option>
+          <option v-for="type in types" :key="type" :value="type">{{type}}</option>
+        </select>
+      </div>
+      <div class="col ">
+        <select v-model="selectedRole">
+          <option value="">Select role</option>
+          <option v-for="role in roles" :key="role" :value="role">{{role}}</option>
+        </select>
+      </div>
+      <div class="col ">
+      <p @click="sort('username')">Username<span v-if="sortBy == 'username'" v-html="sortSymbol"></span></p>
+      </div>
+      <div class="col ">
+      <p @click="sort('name')">First name<span v-if="sortBy == 'firstName'" v-html="sortSymbol"></span></p>
+      </div>
+      <div class="col ">
+      <p @click="sort('surname')">Last name<span v-if="sortBy == 'lastName'" v-html="sortSymbol"></span></p>
+      </div>
+      <div class="col ">
+      <p @click="sort('points')">Points<span v-if="sortBy == 'points'" v-html="sortSymbol"></span></p>
+      </div>
     </div>
-    <div class="filter-container">
-      <select  v-model="selectedType">
-        <option value="">Select type</option>
-        <option v-for="type in types" :key="type" :value="type">{{type}}</option>
-      </select>
-      <select v-model="selectedRole">
-        <option value="">Select role</option>
-        <option v-for="role in roles" :key="role" :value="role">{{role}}</option>
-      </select>
-    </div>
-  <div class="row row-cols-1 row-cols-5 g-4">
+
+  <div class="row row-cols-1 row-cols-5 g-2">
     <div class="col" v-for="user in filteredUsers">
       <div class="card" >
         <img v-bind:src="user.profileImage" class="card-img-top h-100 w-100" alt="...">
@@ -31,7 +42,6 @@
           </p>
 
         </div>
-        </router-link>
 
       </div>
     </div>
@@ -53,7 +63,7 @@ module.exports =
           selectedRole: '',
           sortBy: 'username',
           sortDirection: 'asc',
-          roles: ["ADMIN", "MANAGER", "REGULAR"],
+          roles: ["ADMIN", "MANAGER", "BUYER", "DELIVERER"],
           types: ["BRONZE", "SILVER", "GOLD"],
         }
       },
@@ -63,6 +73,43 @@ module.exports =
           this.vCode = value;
 
         },
+        sort: function(param){
+          if(this.sortBy == param) {
+            this.sortDirection = this.sortDirection == 'asc' ? 'desc' : 'asc';
+          }
+          this.sortBy = param;
+          console.log(this.sortBy)
+          let sortedUsers = this.users;
+          this.users.sort((a, b) => {
+            let aval = this.sortBy.split('.').reduce(function(p,prop) { return p[prop]; }, a);
+            aval = aval.toLowerCase();
+            let bval = this.sortBy.split('.').reduce(function(p,prop) { return p[prop]; }, b);
+            bval = bval.toLowerCase();
+            
+            let modifier = 1;
+            if(this.sortDirection == 'desc') {
+              modifier = -1;
+            }
+            if(aval < bval) {
+              return -1 * modifier;
+            }
+            if(aval > bval) {
+              return modifier;
+            }
+            return 0;
+          });
+        },
+        getFilteredByRole: function(users, param){
+            if(!param)
+              return users;
+            return users.filter(user => user.userRoleType.toLowerCase().indexOf(param.toLowerCase()) >-1);
+        },
+        getFilteredByType: function (users, param){
+          if(!param)
+            return users;
+            return users.filter(user => user.buyerTypeRank.toLowerCase().indexOf(param.toLowerCase()) > -1);
+          },
+
         getFilteredByName: function (users, params){
           let filteredByName = [];
           if(params[0] === ''  || params[0] == ' '){
@@ -159,8 +206,14 @@ module.exports =
         filteredUsers: function (){
 
 
-          return this.getFilteredByName(this.users, this.vCode.split(' '))
-        }
+
+          return this.getFilteredByType(
+                 this.getFilteredByRole(
+                 this.getFilteredByName(this.users, this.vCode.split(' ')), this.selectedRole), this.selectedType);
+        },
+        sortSymbol: function() {
+          return this.sortDirection=='asc' ? '&#x25B2;' : '&#x25BC;'
+        },
 
       },
       mounted(){
