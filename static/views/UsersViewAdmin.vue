@@ -31,7 +31,7 @@
       </div>
     </div>
 
-  <div class="row row-cols-1 row-cols-5 g-2">
+  <div class="row row-cols-1 row-cols-3 g-2">
     <div class="col" v-for="user in filteredUsers">
       <div class="card" >
         <img v-bind:src="user.profileImage" class="card-img-top h-100 w-100" alt="...">
@@ -40,7 +40,11 @@
           <p class="card-text">Ime: {{user.name}} Surname: {{user.surname}} Gender: {{user.genderType }}
             Role: {{user.userRoleType}} Date of birth: {{user.dateOfBirth}}
           </p>
-
+          <div class="btn-group" role="group">
+              <button  v-if="user.userRoleType != 'Admin'" @click="deleteUser(user.username)" class="btn btn-secondary">Delete</button>
+              <button  v-if="user.userRoleType != 'Admin' && !user.isBlocked" class="btn btn-secondary">Block</button>
+            <button  v-else-if="user.userRoleType != 'Admin' && user.isBlocked" class="btn btn-secondary">Unblock</button>
+          </div>
         </div>
 
       </div>
@@ -73,6 +77,17 @@ module.exports =
           this.vCode = value;
 
         },
+        deleteUser: function (username){
+          if(!localStorage.jws){
+            this.$router.push('/')
+            return
+          }
+
+          axios.delete('/admin/user/' + username, {headers:{'Authorization': 'Bearer' +localStorage.jws}})
+          .then(() => this.getUsers())
+          .catch(r => console.log(r));
+
+        },
         sort: function(param){
           if(this.sortBy == param) {
             this.sortDirection = this.sortDirection == 'asc' ? 'desc' : 'asc';
@@ -85,7 +100,7 @@ module.exports =
             aval = aval.toLowerCase();
             let bval = this.sortBy.split('.').reduce(function(p,prop) { return p[prop]; }, b);
             bval = bval.toLowerCase();
-            
+
             let modifier = 1;
             if(this.sortDirection == 'desc') {
               modifier = -1;

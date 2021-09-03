@@ -9,9 +9,28 @@ public class Buyer extends User {
     private List<String> orderList;
     private Cart cart;
     private double points;
+    private boolean sus;
+    private int orderCancelCount;
     private BuyerType buyerType;
 
-
+    public boolean getSus(){
+        return sus;
+    }
+    public void setSus(boolean sus){
+        this.sus = sus;
+    }
+    public int getOrderCancelCount(){
+        return orderCancelCount;
+    }
+    public void setOrderCancelCount(int orderCancelCount){
+        this.orderCancelCount = orderCancelCount;
+    }
+    public void increaseOrderCancelCount(){
+        ++orderCancelCount;
+        if(orderCancelCount > 5){
+            this.sus = true;
+        }
+    }
     public Buyer(String username, String password, String name, String surname, GenderType genderType,
                  Date dateOfBirth, Cart cart, double points,
                  BuyerType buyerType) {
@@ -21,6 +40,8 @@ public class Buyer extends User {
         this.cart = cart;
         this.points = points;
         this.buyerType = buyerType;
+        this.sus = false;
+        this.orderCancelCount = 0;
     }
 
     public Buyer(String username, String password, String name, String surname, GenderType genderType, Date dateOfBirth) {

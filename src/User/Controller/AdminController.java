@@ -33,7 +33,25 @@ public class AdminController {
         }
 
         );
-
+        delete("/admin/user/:username", (req, res) ->
+        {
+            try{
+                    Optional<User> u = userService.validateJWT(req, UserRoleType.Admin);
+                    if(!u.isPresent()){
+                        return forbidden(res);
+                    }
+                    String username = req.params(":username");
+                    if(username == null || username.isBlank()){
+                        return badRequest("Invalid username", res);
+                    }
+                    return userService.deleteUser(username)
+                            ? ok("User Deleted", res)
+                            : badRequest("User was not deleted", res);
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
         post("/admin/newmanager", (req,res) ->
                 {
                     try {

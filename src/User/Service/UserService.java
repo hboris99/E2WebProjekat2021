@@ -81,4 +81,8 @@ public class UserService {
         Manager manager = new Manager(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
         return userRepository.Create(manager);
     }
+
+    public boolean deleteUser(String username) {
+        return userRepository.Delete(username);
+    }
 }
