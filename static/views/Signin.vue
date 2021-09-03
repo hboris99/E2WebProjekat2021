@@ -54,7 +54,6 @@
 
             <div class="invalid-feedback">Please enter your password.</div>
 
-          <input class="btn btn-primary" type="submit" value="Sign In" />
         </form>
       </div>
     </div>
@@ -121,7 +120,6 @@ module.exports = {
 .text-muted, .text-reset{
   color: rgba(82,5,2,0.76);
 }
-<<<<<<< HEAD
 .btn-primary{
   background: #4b0502;
   border: #4b0502;
@@ -144,9 +142,5 @@ module.exports = {
   color: #4b0502 !important;
   font-weight: bold !important;
 
-=======
-.spacer {
-  height: 20px;
->>>>>>> developVukasin
-}
+
 </style>

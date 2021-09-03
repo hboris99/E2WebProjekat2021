@@ -68,86 +68,55 @@ module.exports =
           if(params[0] === ''  || params[0] == ' '){
             filteredByName =  users;
           }else if(params[1] == null || params[1] == ' '){
-            filteredByName =  users.filter((user) => user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1);
+            filteredByName =    users.filter((user) => user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1
+                              );
+
           }else if(params[2] == null || params[2] == ' '){
             filteredByName =  users.filter((user) =>
-              user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
-              user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1
-            );
-          }else{
-
-            filteredByName =  users.filter((user) =>
-
-              user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
-              user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
-              user.name.toLowerCase().indexOf(params[2].toLowerCase()) > -1
-
-            );
-          }
-          if(filteredByName === undefined || filteredByName.length == 0){
-            return users;
-          }else{
-            return filteredByName;
-          }
-
-        },
-        getFilteredBySurname: function (users, params){
-          let filteredBySurname = [];
-
-          if(params[0] === ''  || params[0] == ' '){
-            filteredBySurname = users;
-          }else if(params[1] == null || params[1] == ' '){
-            filteredBySurname =  users.filter((user) => user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1);
-          }else if(params[2] == null || params[2] == ' '){
-            filteredBySurname =  users.filter((user) =>
-                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
-                user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1
-            );
-          }else {
-
-            filteredBySurname =  users.filter((user) =>
-
-                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+              user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
                 user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
-                user.surname.toLowerCase().indexOf(params[2].toLowerCase()) > -1
-
-            );
-          }if(filteredBySurname === undefined || filteredBySurname.length == 0){
-            return users;
-          }else{
-            return filteredBySurname;
-          }
-
-        },
-        getFilteredByUsername: function (users, params){
-          let array  = [];
-          if(params[0] === ''  || params[0] == ' '){
-            array = users;
-          }else if(params[1] == null || params[1] == ' '){
-            array =  users.filter((user) => user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1);
-          }else if(params[2] == null || params[2] == ' '){
-            array =  users.filter((user) =>
-                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
-                user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1
-            );
-          }else {
-
-
-            array =  users.filter((user) =>
-
-                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
                 user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
-                user.username.toLowerCase().indexOf(params[2].toLowerCase()) > -1
+                user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
+                user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1
+            );
+          }else{
+              //Problem reisit tako sto se koristi && za  name0 surname 1 i username 3
+            filteredByName =  users.filter((user) =>
+
+              user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
+              user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+              user.username.toLowerCase().indexOf(params[2].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
+                user.surname.toLowerCase().indexOf(params[2].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[2].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+                user.surname.toLowerCase().indexOf(params[2].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[2].toLowerCase()) > -1 &&
+                user.surname.toLowerCase().indexOf(params[0].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[1].toLowerCase()) > -1 ||
+                user.name.toLowerCase().indexOf(params[2].toLowerCase()) > -1 &&
+                user.surname.toLowerCase().indexOf(params[1].toLowerCase()) > -1 &&
+                user.username.toLowerCase().indexOf(params[0].toLowerCase()) > -1
 
             );
-          }if(array === undefined || array.length == 0){
-            return users;
-          }else{
-            return array
-
           }
+          return filteredByName
 
         },
+
         getUsers: function (){
           if(!localStorage.jws){
             return;
@@ -188,9 +157,9 @@ module.exports =
         },
         },computed: {
         filteredUsers: function (){
-          
 
-          return this.getFilteredByUsername(this.getFilteredBySurname(this.getFilteredByName(this.users, this.vCode.split(' ')), this.vCode.split(' ')),this.vCode.split(' '))
+
+          return this.getFilteredByName(this.users, this.vCode.split(' '))
         }
 
       },
