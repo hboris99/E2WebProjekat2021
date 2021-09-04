@@ -6,12 +6,12 @@ import java.util.Date;
 import java.util.List;
 
 public class Buyer extends User {
-    private List<String> orderList;
-    private Cart cart;
-    private double points;
-    private boolean sus;
-    private int orderCancelCount;
-    private BuyerType buyerType;
+    public  List<String> orderList;
+    public Cart cart;
+    public double points;
+    public boolean sus;
+    public int orderCancelCount;
+    public BuyerType buyerType;
 
     public boolean getSus(){
         return sus;

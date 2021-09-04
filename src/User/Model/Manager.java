@@ -5,7 +5,7 @@ import Restaurant.Model.Restaurant;
 import java.util.Date;
 
 public class Manager extends User {
-    private Restaurant restaurant;
+    public Restaurant restaurant;
 
     public Manager(String username, String password, String name,
                    String surname, GenderType genderType, Date dateOfBirth
