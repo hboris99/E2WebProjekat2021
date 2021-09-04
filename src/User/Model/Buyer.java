@@ -1,10 +1,12 @@
 package User.Model;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+<<<<<<< Updated upstream
 public class Buyer extends User {
     public  List<String> orderList;
     public Cart cart;
@@ -12,6 +14,7 @@ public class Buyer extends User {
     public boolean sus;
     public int orderCancelCount;
     public BuyerType buyerType;
+
 
     public boolean getSus(){
         return sus;

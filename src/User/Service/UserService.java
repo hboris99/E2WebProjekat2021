@@ -85,4 +85,25 @@ public class UserService {
     public boolean deleteUser(String username) {
         return userRepository.Delete(username);
     }
+
+    public boolean blockUser(String username) {
+        Optional<User> u = getByUsername(username);
+        if(!u.isPresent()) {
+            return false;
+        }
+        u.get().setBlocked(true);
+        return updateUser(u.get());
+    }
+    public boolean unblockUser(String username) {
+        Optional<User> u = getByUsername(username);
+        if(!u.isPresent()) {
+            return false;
+        }
+        u.get().setBlocked(false);
+        return updateUser(u.get());
+    }
+    public boolean updateUser(User user) {
+        return userRepository.Update(user);
+    }
+
 }

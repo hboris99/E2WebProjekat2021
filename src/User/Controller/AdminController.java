@@ -33,6 +33,46 @@ public class AdminController {
         }
 
         );
+        post("/admin/user/block/:username", (req, res) -> {
+           try{
+               Optional<User> u = userService.validateJWT(req, UserRoleType.Admin);
+               if(!u.isPresent()){
+                   return forbidden(res);
+               }
+               String username = req.params(":username");
+               if(username == null || username.isBlank()){
+                   return badRequest("Invalid username", res);
+               }
+
+               return userService.blockUser(username)
+                       ?ok("User blocked", res)
+                       : badRequest("Failed to block user", res);
+
+           }catch(Exception e){
+               e.printStackTrace();
+               return internal(res);
+           }
+        });
+        post("/admin/user/unblock/:username", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Admin);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String username = req.params(":username");
+                if(username == null || username.isBlank()){
+                    return badRequest("Invalid username", res);
+                }
+
+                return userService.unblockUser(username)
+                        ?ok("User blocked", res)
+                        : badRequest("Failed to block user", res);
+
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
         delete("/admin/user/:username", (req, res) ->
         {
             try{
