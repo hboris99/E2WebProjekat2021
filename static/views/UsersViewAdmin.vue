@@ -34,8 +34,8 @@
   <div class="row row-cols-1 row-cols-3 g-2">
     <div class="col" v-for="user in filteredUsers">
       <div v-if="!user.isBlocked" class="card  text-white bg-dark">
-        <img v-bind:src="user.profileImage" class="card-img-top h-100 w-100" alt="...">
-        <div class="card-body">
+        <img v-if="user.profileImage" :src="'http://localhost:8080/image/' + user.profileImg" class="card-img-top h-100 w-100" alt="...">
+        <img v-else src="images/profile-pic-placeholder.png" class="card-img-top h-100 w-100" alt="...">        <div class="card-body">
           <h5 class="card-title">{{user.username}}</h5>
           <p class="card-text">Ime: {{user.name}} Surname: {{user.surname}} Gender: {{user.genderType }}
             Role: {{user.userRoleType}} Date of birth: {{user.dateOfBirth}}
@@ -48,7 +48,8 @@
         </div>
       </div>
       <div v-else-if="user.orderCancelCount >= 5" class="card  text-white bg-warning">
-        <img v-bind:src="user.profileImage" class="card-img-top h-100 w-100" alt="...">
+        <img v-if="user.profileImage" :src="'http://localhost:8080/image/' + user.profileImg" class="card-img-top h-100 w-100" alt="...">
+        <img v-else src="images/profile-pic-placeholder.png" class="card-img-top h-100 w-100" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{user.username}}</h5>
           <p class="card-text">Ime: {{user.name}} Surname: {{user.surname}} Gender: {{user.genderType }}
@@ -62,7 +63,8 @@
         </div>
       </div>
       <div v-else class="card  text-white bg-danger">
-        <img v-bind:src="user.profileImage" class="card-img-top h-100 w-100" alt="...">
+        <img v-if="user.profileImage" :src="'http://localhost:8080/image/' + user.profileImg" class="card-img-top h-100 w-100" alt="...">
+        <img v-else src="images/profile-pic-placeholder.png" class="card-img-top h-100 w-100" alt="...">
         <div class="card-body">
           <h5 class="card-title">{{user.username}}</h5>
           <p class="card-text">Ime: {{user.name}} Surname: {{user.surname}} Gender: {{user.genderType }}
@@ -236,20 +238,6 @@ module.exports =
                 let users = r.data;
                 users.forEach(u =>
                 {
-                  if(u.genderType == 'MALE'){
-                  axios.get('https://randomuser.me/api/?gender=male').then(r => {
-                    u.profileImage = r.data.results[0].picture.large;
-                  });}
-                  if(u.genderType == 'FEMALE'){
-                    axios.get('https://randomuser.me/api/?gender=female').then(r => {
-                      u.profileImage = r.data.results[0].picture.large;
-                    });
-                  }
-                  if(u.genderType == 'OTHER'){
-                    axios.get('https://randomuser.me/api/?inc=picture').then(r => {
-                      u.profileImage = r.data.results[0].picture.large;
-                    });
-                  }
 
                   if(!u.points){
                     u.points = 0.0;

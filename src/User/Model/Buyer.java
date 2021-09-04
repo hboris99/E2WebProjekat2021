@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-<<<<<<< Updated upstream
 public class Buyer extends User {
     public  List<String> orderList;
     public Cart cart;

@@ -65,6 +65,7 @@ module.exports= {
       userRoleType: '',
       gender: '',
       birthDate: '',
+      profileImage: '',
     }
   },
   methods: {
@@ -80,6 +81,7 @@ module.exports= {
           surname: this.surname,
           gender: this.gender,
           birthDate: this.birthDate,
+          profileImage: this.profileImage,
         }
         console.log(request)
         let url = this.userRoleType == 'MANAGER' ? '/admin/newmanager' : '/admin/newdeliverer';

@@ -31,9 +31,11 @@ import spark.Session;
 public class Test {
 
     public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    public static String UPLOAD_DIR = "uploads";
 
 
     public static void main(String[] args) throws Exception {
+        new File(UPLOAD_DIR).mkdir();
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         Date dt = new Date(1999,8,23);
