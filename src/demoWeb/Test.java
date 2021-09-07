@@ -11,9 +11,7 @@ import java.util.Date;
 import Restaurant.Repository.RestaurantRepository;
 import User.Controller.AdminController;
 import User.Controller.UserController;
-import User.Model.GenderType;
-import User.Model.User;
-import User.Model.UserRoleType;
+import User.Model.*;
 import User.Repository.UserRepository;
 import User.Service.UserService;
 import com.google.gson.Gson;
@@ -22,13 +20,19 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 public class Test {
-
-    public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
+    public static Gson gson;
     public static String UPLOAD_DIR = "uploads";
 
 
     public static void main(String[] args) throws Exception {
         new File(UPLOAD_DIR).mkdir();
+        RuntimeTypeAdapterFactory<User> userAdapterFactory = RuntimeTypeAdapterFactory.of(User.class)
+                .registerSubtype(Buyer.class)
+                .registerSubtype(Admin.class)
+                .registerSubtype(Manager.class)
+                .registerSubtype(Deliverer.class);
+        gson = new GsonBuilder()
+                .registerTypeAdapterFactory(userAdapterFactory).setDateFormat("yyyy-MM-dd").create();
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         Date dt = new Date(1999,8,23);

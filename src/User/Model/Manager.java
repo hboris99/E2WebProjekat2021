@@ -3,14 +3,13 @@ package User.Model;
 import Restaurant.Model.Restaurant;
 
 import java.util.Date;
+import java.util.Optional;
 
 public class Manager extends User {
     public Restaurant restaurant;
 
-    public Manager(String username, String password, String name,
-                   String surname, GenderType genderType, Date dateOfBirth
-                   ) {
-        super(username, password, name, surname, genderType, dateOfBirth, UserRoleType.Manager);
+    public Manager(User u) {
+        super(u.username, u.password, u.name, u.surname, u.genderType, u.dateOfBirth, UserRoleType.Manager);
     }
 
     public Restaurant getRestaurant() {

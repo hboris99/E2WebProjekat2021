@@ -71,6 +71,7 @@ public class UserService {
             return false;
         }
         Deliverer deliverer = new Deliverer(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
+        System.out.println(deliverer.getClass().getName());
         return userRepository.Create(deliverer);
     }
 
@@ -78,7 +79,10 @@ public class UserService {
         if(getByUsername(req.getUsername()).isPresent()){
             return false;
         }
-        Manager manager = new Manager(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
+        User u = new User(req.getUsername(), req.getName(), req.getSurname(), req.getPassword(), req.getGender(), req.getBirthDate(), UserRoleType.Manager);
+        Manager manager = new Manager(u);
+        System.out.println(manager.getClass().getName());
+
         return userRepository.Create(manager);
     }
 
@@ -113,6 +117,14 @@ public class UserService {
     }
     public List<Manager> getManagers() {
 
+        for(User u: getAllUsers()){
+            if(u instanceof Manager){
+                System.out.println("JESTE");
+                System.out.println(((Manager) u).getRestaurant());
+            }else{
+                System.out.println(u.getClass().getName());
+            }
+        }
 
         return getAllUsers().stream().filter(u -> u.getUserRoleType().equals(UserRoleType.Manager)  && u instanceof Manager)
                 .map(u -> (Manager) u)

@@ -13,7 +13,9 @@ public class Restaurant implements IRepository<Integer> {
     private Location restaurantLocation;
     private String logo;
     private boolean isDeleted;
+    public Restaurant(){
 
+    }
     public Restaurant(String name, RestaurantType restaurantType, List<Article> articleList, boolean working, Location restaurantLocation, String logo) {
         this.name = name;
         this.restaurantType = restaurantType;

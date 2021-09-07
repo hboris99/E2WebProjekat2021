@@ -6,14 +6,14 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class User implements IRepository<String>, Serializable {
-    private String username;
-    private String password;
-    private String name;
-    private String surname;
-    private GenderType genderType;
+    public String username;
+    public String password;
+    public String name;
+    public String surname;
+    public GenderType genderType;
     public UserRoleType userRoleType;
-    private Date dateOfBirth;
-    private String profileImage;
+    public Date dateOfBirth;
+    public String profileImage;
 
     public String getProfileImage() {
         return profileImage;

@@ -29,6 +29,7 @@ public class AdminController {
                 res.type("application/json");
                 for(User u : userService.getAllUsers()){
                     System.out.println(u.getUsername());
+                    System.out.println(u.getClass().getName());
                     System.out.println(u.getUserRoleType());
                 }
                 return gson.toJson(userService.getAllUsers());
