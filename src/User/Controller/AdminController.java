@@ -1,25 +1,41 @@
 package User.Controller;
 
+import Restaurant.DTO.RestaurantRequest;
+import Restaurant.Model.Restaurant;
+import Restaurant.Service.RestaurantService;
 import User.DTO.LogInReq;
 import User.DTO.RegisterReq;
 import User.Model.User;
 import User.Model.UserRoleType;
 import User.Service.UserService;
 import demoWeb.JSONWebTokenUtil;
+import demoWeb.Test;
 import spark.Request;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import static demoWeb.Test.gson;
 import static demoWeb.Responses.*;
 import static spark.Spark.*;
 import User.Service.UserService;
 
+import javax.servlet.MultipartConfigElement;
+import javax.servlet.http.Part;
+
 public class AdminController {
     private UserService userService;
+    private RestaurantService restaurantService;
 
-    public AdminController(UserService userService) {
+    public AdminController(UserService userService, RestaurantService restaurantService) {
         this.userService = userService;
+        this.restaurantService = restaurantService;
         get("/admin/users", (req, res) ->{
 
                 Optional<User> user = userService.validateJWT(req, UserRoleType.Admin);
@@ -36,6 +52,39 @@ public class AdminController {
         }
 
         );
+        post("/admin/restaurant", (req, res) -> {
+           try{
+               Optional<User> u = userService.validateJWT(req, UserRoleType.Admin);
+               if(!u.isPresent()){
+                   return forbidden(res);
+               }
+               String location = "image";
+               long maxFileSize = 100000000;
+               long maxReqSize = 1000000000;
+               int filesizeThreshold = 1024;
+               MultipartConfigElement mce = new MultipartConfigElement(location, maxFileSize, maxReqSize, filesizeThreshold);
+               req.raw().setAttribute("org.eclipse.jetty.multipartConfig", mce);
+               Collection<Part> parts  = req.raw().getParts();
+               String fileName = req.raw().getPart("file").getSubmittedFileName();
+               Path out = Paths.get(Test.UPLOAD_DIR  + File.separator + fileName);
+               try(final InputStream in = req.raw().getPart("file").getInputStream()){
+                   if(!Files.exists(out))
+                       Files.copy(in, out);
+               }
+               RestaurantRequest restaurantRequest = gson.fromJson(req.raw().getParameter("req"), RestaurantRequest.class);
+               Optional<Restaurant> r = restaurantService.createRestaurant(restaurantRequest, fileName);
+
+               if(!r.isPresent()){
+                   return badRequest("Bad reques", res);
+               }
+               return userService.addRestaurantToManager(restaurantRequest.getManagerUsername(), r.get())
+                       ? ok("Added", res)
+                       : badRequest("Failed to add", res);
+           }catch(Exception e){
+               e.printStackTrace();
+               return internal(res);
+           }
+        });
         post("/admin/user/block/:username", (req, res) -> {
            try{
                Optional<User> u = userService.validateJWT(req, UserRoleType.Admin);

@@ -1,1 +1,1 @@
-[]
+[{"ID":1,"name":"Bubi gril","managerUsername":"","articleList":[],"working":false,"restaurantLocation":{"latitude":0.0,"longitude":0.0,"adress":{"streetAndNumber":"Bulevar cara Lazara 65","place":"Vojvodina","zipcode":21000}},"isDeleted":false},{"ID":2,"name":"Bubi Grill","managerUsername":"test2","articleList":[],"working":false,"restaurantLocation":{"latitude":0.0,"longitude":0.0,"adress":{"streetAndNumber":"Bulevar Cara Lazara 65","place":"Novi Sad City","zipcode":21000}},"logo":"quick-fix-movies-to-watch-fear-and-loathing-in-las-vegas.jpg","isDeleted":false}]

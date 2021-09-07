@@ -27,7 +27,7 @@
         <option value="New">New</option>
         <option v-for="manager in managers" :key="manager.username" :value="manager.username">{{manager.username}}</option>
       </select>
-      <geosearch @select="selectLocation">
+      <geosearch @selected="selectLocation">
 
       </geosearch>
 
@@ -88,14 +88,52 @@ module.exports= {
       this.file = file;
     },
     selectLocation: function(l) {
+      console.log('Radi console log')
+      console.log(l.address.city)
       this.place = l.address.city;
       this.streetAndNumber = l.address.road +  l.address.house_number;
-      this.zipcode = l.adress.postcode;
+      this.zipcode = l.address.postcode;
       this.lat = l.lat;
       this.lon = l.lon;
       this.selectedLocation = true;
+
     },
     newRestaurant: function (){
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+      }
+      console.log(this.place)
+      let data = new FormData();
+      let req ={
+        name: this.name,
+        restaurantType: this.restaurantType,
+        managerUsername: this.selectedManager,
+        location: {
+          lat: this.lat,
+          lon: this.lon,
+          adress: {
+            place: this.place,
+            streetAndNumber: this.streetAndNumber,
+            zipcode: this.zipcode,
+
+          }
+        }
+      };
+      data.append('req', JSON.stringify(req));
+      data.append('file', this.file);
+
+      let config = {
+        headers:{
+          'Content-Type': 'multipart/form-data',
+          'Authorization': 'Bearer' + localStorage.jws,
+        },
+      };
+
+      axios.post('/admin/restaurant', data, config)
+      .then(() => {
+        this.$router.go(0);
+      }).catch(r => console.log(r));
 
     },
     getManagers: function (){

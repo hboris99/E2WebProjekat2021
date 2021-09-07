@@ -1,5 +1,6 @@
 package User.Service;
 
+import Restaurant.Model.Restaurant;
 import User.DTO.LogInReq;
 import User.Model.User;
 import User.Model.UserRoleType;
@@ -129,5 +130,15 @@ public class UserService {
         return getAllUsers().stream().filter(u -> u.getUserRoleType().equals(UserRoleType.Manager)  && u instanceof Manager)
                 .map(u -> (Manager) u)
                 .collect(Collectors.toList());
+    }
+
+    public boolean addRestaurantToManager(String managerUsername, Restaurant restaurant) {
+        Optional<User> u = getByUsername(managerUsername);
+        if(!u.isPresent() || !u.get().getUserRoleType().equals(UserRoleType.Manager)){
+            return false;
+        }
+        Manager m = (Manager) u.get();
+        m.setRestaurant(restaurant);
+        return userRepository.Update(m);
     }
 }

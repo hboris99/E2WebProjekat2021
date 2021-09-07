@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Date;
 
 import Restaurant.Repository.RestaurantRepository;
+import Restaurant.Service.RestaurantService;
 import User.Controller.AdminController;
 import User.Controller.UserController;
 import User.Model.*;
@@ -43,10 +44,11 @@ public class Test {
 
         UserRepository userRepository = new UserRepository("users.json");
         RestaurantRepository restaurantRepository = new RestaurantRepository("restoraunts.json");
+        RestaurantService restaurantService = new RestaurantService(restaurantRepository);
         //userRepository.LoadAdminUsers("adminUsers.json");
 
         UserService userService = new UserService(userRepository);
-        AdminController adminController = new AdminController(userService);
+        AdminController adminController = new AdminController(userService, restaurantService);
         UserController userController = new UserController(userService);
        
     }

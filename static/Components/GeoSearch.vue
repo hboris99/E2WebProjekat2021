@@ -18,6 +18,7 @@ module.exports = {
   }),
   methods: {
     select: function (r){
+      console.log(r);
       this.selected = r;
       this.results = [];
       this.$emit('selected',r);
@@ -27,7 +28,7 @@ module.exports = {
       this.results=[];
       let self = this;
       this.timeout=setTimeout(function() {
-        axios.get(' https://eu1.locationiq.com/v1/search.php?key=pk.3a0a65d7d139ba57d7f77aa5915e6724&format=json&q=' + self.query)
+        axios.get(' https://eu1.locationiq.com/v1/search.php?key=pk.3a0a65d7d139ba57d7f77aa5915e6724&format=json&addressdetails=1&limit=5&q=' + self.query)
         .then(r => {self.results = r.data; console.log(r.data)})
         .catch(r => console.log(r))
       }, 1000)
