@@ -6,11 +6,9 @@ import static spark.Spark.staticFiles;
 import static spark.Spark.webSocket;
 
 import java.io.File;
-import java.security.Key;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
+import Restaurant.Repository.RestaurantRepository;
 import User.Controller.AdminController;
 import User.Controller.UserController;
 import User.Model.GenderType;
@@ -22,12 +20,7 @@ import com.google.gson.Gson;
 
 
 import com.google.gson.GsonBuilder;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.security.Keys;
-import spark.Session;
+
 public class Test {
 
     public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
@@ -45,7 +38,7 @@ public class Test {
 
 
         UserRepository userRepository = new UserRepository("users.json");
-
+        RestaurantRepository restaurantRepository = new RestaurantRepository("restoraunts.json");
         //userRepository.LoadAdminUsers("adminUsers.json");
 
         UserService userService = new UserService(userRepository);

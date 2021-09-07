@@ -5,6 +5,7 @@
   <div id="mainwindow">
   <div id="newuserreg">
   <div class="d-flex justify-content-between">
+    <Geosearch></Geosearch>
     <form class="row g-3 needs-validation" @submit="newUser" id="sign-in-form" novalidate>
       <div class="form-floating">
         <input class="form-control" placeholder="Username" id="form-name-input" v-model="username" type="text">

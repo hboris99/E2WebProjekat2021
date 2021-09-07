@@ -106,4 +106,16 @@ public class UserService {
         return userRepository.Update(user);
     }
 
+    public List<Manager> getRestaurantlessManagers() {
+
+        return   getManagers().stream().filter(m -> m.getRestaurant() == null)
+                .collect(Collectors.toList());
+    }
+    public List<Manager> getManagers() {
+
+
+        return getAllUsers().stream().filter(u -> u.getUserRoleType().equals(UserRoleType.Manager)  && u instanceof Manager)
+                .map(u -> (Manager) u)
+                .collect(Collectors.toList());
+    }
 }

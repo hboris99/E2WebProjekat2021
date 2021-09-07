@@ -7,6 +7,8 @@ import User.Model.UserRoleType;
 import User.Service.UserService;
 import demoWeb.JSONWebTokenUtil;
 import spark.Request;
+
+import java.io.IOException;
 import java.util.Optional;
 import static demoWeb.Test.gson;
 import static demoWeb.Responses.*;
@@ -120,5 +122,17 @@ public class AdminController {
             }
         }
                 );
+        get("/admin/getmanagers", (req, res) -> {
+           try{
+               Optional<User> user = userService.validateJWT(req, UserRoleType.Admin);
+               if(!user.isPresent()){
+                   return forbidden(res);
+               }
+               return  gson.toJson(userService.getRestaurantlessManagers());
+           }catch(Exception e){
+               e.printStackTrace();
+               return internal(res);
+           }
+        });
     }
 }
