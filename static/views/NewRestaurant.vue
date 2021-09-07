@@ -13,16 +13,12 @@
 
 
 
-      <select clas="form-select form-select-lg" v-model="restaurantType">
-        <option :value="null" disabled hidden>Select restaurant Type</option>
-        <option value="ITALIAN">Italian</option>
-        <option value="MEXICAN">MEXICAN</option>
-        <option value="CHINESE">Chinese</option>
-        <option value="FASTFOOD">Fast Food</option>
-        <option value="GRILL">Grill</option>
+      <select class="form-select form-select-lg" v-model="selectedType">
+        <option value="" disabled>Select restaurant Type</option>
+        <option v-for="type in types" :key="type" :value="type">{{type}}</option>
 
       </select>
-      <select clas="form-select form-select-lg" v-model="selectedManager">
+      <select class="form-select form-select-lg" v-model="selectedManager">
         <option value="" disabled>Select manager</option>
         <option value="New">New</option>
         <option v-for="manager in managers" :key="manager.username" :value="manager.username">{{manager.username}}</option>
@@ -59,6 +55,37 @@
       <input class="btn btn-primary" type="submit" value="Create new Restaurant">
 
     </form>
+
+    <form @submit.prevent :class="selectedManager != 'New' ? 'disabled' : ''">
+      <div class="form-floating">
+        <input class="form-control"  id="form-username-input" v-model="username" type="text">
+        <label for="form-username-input">Username</label>
+      </div>
+      <div class="form-floating">
+        <input class="form-control"  id="form-password-input" v-model="password" type="text">
+        <label for="form-password-input">Password</label>
+      </div>
+      <div class="form-floating">
+        <input class="form-control"  id="form-fname-input" v-model="mname" type="text">
+        <label for="form-fname-input">First Name</label>
+      </div>
+      <div class="form-floating">
+        <input class="form-control"  id="form-lname-input" v-model="surname" type="text">
+        <label for="form-lname-input">Surname</label>
+      </div>
+      <select class="form-select form-select-lg" v-model="sex" :disabled="selectedManager != 'New'">
+        <option value="MALE">Male</option>
+        <option value="FEMALE">Female</option>
+        <option value="OTHER">Other</option>
+      </select>
+      <div class="form-floating input-group">
+        <input type="date" v-model="birthDate" :max="new Date()">
+      </div>
+      <button
+          :class="selectedManager != 'New' ? 'disabled-btn' : 'button-primary'"
+          :disabled="selectedManager != 'New'"
+          @click="registerManager">Add manager</button>
+    </form>
   </div>
 </div>
   </div></div>
@@ -74,12 +101,20 @@ module.exports= {
       place:'',
       selectedManager: '',
       managers: [],
-      restaurantType: '',
+      selectedType: '',
+      types: ['Italian', 'Chinese', 'Mexican', 'FastFood', 'Grill'],
       selectedLocation: false,
       file: '',
       fileUrl: '',
       lat: '',
       lon: '',
+      username: '',
+      password: '',
+      mname: '',
+      surname: '',
+      sex: 'MALE',
+      birthDate: '',
+
     };
   },methods: {
     selectFile: function (){
@@ -88,7 +123,9 @@ module.exports= {
       this.file = file;
     },
     selectLocation: function(l) {
+      console.log(this.type)
       console.log('Radi console log')
+      console.log(l.lat);
       console.log(l.address.city)
       this.place = l.address.city;
       this.streetAndNumber = l.address.road +  l.address.house_number;
@@ -107,11 +144,11 @@ module.exports= {
       let data = new FormData();
       let req ={
         name: this.name,
-        restaurantType: this.restaurantType,
+        restaurantType: this.selectedType,
         managerUsername: this.selectedManager,
         location: {
-          lat: this.lat,
-          lon: this.lon,
+          latitude: this.lat,
+          longitude: this.lon,
           adress: {
             place: this.place,
             streetAndNumber: this.streetAndNumber,
@@ -144,7 +181,27 @@ module.exports= {
       axios.get('/admin/getmanagers', {headers:{'Authorization': 'Bearer' + localStorage.jws}}).then(r =>
           this.managers = r.data
       ).catch(r => console.log(r));
-    }
+    },
+    registerManager: function() {
+
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+      }
+      let registerRequest = {
+        username: this.username,
+        mname: this.firstName,
+        surname: this.lastName,
+        password: this.password,
+        sex: this.sex,
+        birthDate: this.birthDate,
+      };
+      axios.post('/admin/newmanager', registerRequest, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(() => {
+            this.getManagers();
+            })
+          .catch((r) => console.log(r));
+    },
   },
   mounted() {
     this.getManagers();
@@ -169,5 +226,11 @@ module.exports= {
 img{
   width: 150px;
   length: 150px;
+}
+.disabled {
+  color: #aaa;
+}
+.disabled-btn {
+  background: #aaa;
 }
 </style>

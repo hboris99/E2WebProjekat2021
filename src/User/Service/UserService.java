@@ -118,14 +118,7 @@ public class UserService {
     }
     public List<Manager> getManagers() {
 
-        for(User u: getAllUsers()){
-            if(u instanceof Manager){
-                System.out.println("JESTE");
-                System.out.println(((Manager) u).getRestaurant());
-            }else{
-                System.out.println(u.getClass().getName());
-            }
-        }
+
 
         return getAllUsers().stream().filter(u -> u.getUserRoleType().equals(UserRoleType.Manager)  && u instanceof Manager)
                 .map(u -> (Manager) u)
