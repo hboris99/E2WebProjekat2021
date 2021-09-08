@@ -71,7 +71,7 @@ module.exports = {
           && firstNameValid && lastNameValid
           && birthDateValid;
     },
-    register: function(e) {
+     register:async function(e) {
       e.preventDefault();
       if(!this.validateInputs()) {
         return;
@@ -86,9 +86,19 @@ module.exports = {
         gender: this.gender,
         birthDate:this.birthDate,
       };
-      axios.post('/user/register', registerRequest)
-          .then(() => this.$router.push('/'))
-          .catch(r => console.log(r));
+      await axios.post('/user/register', registerRequest,{headers:{'Authorization': 'Bearer' + localStorage.jws}})
+          .then().catch(r => console.log(r));
+
+
+       let loginRequest = {
+         username: this.username,
+         password: this.password,
+       };
+
+       await axios.post("/user/login", loginRequest).then((r) => {
+         localStorage.jws = r.data;
+         this.$router.push("/");
+       });
     },
   },
 };

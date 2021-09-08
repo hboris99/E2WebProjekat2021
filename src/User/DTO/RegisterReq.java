@@ -1,6 +1,7 @@
 package User.DTO;
 
 import User.Model.GenderType;
+import User.Model.User;
 
 import java.util.Date;
 
@@ -19,6 +20,14 @@ public class RegisterReq {
         this.surname = surname;
         this.gender = gender;
         this.birthDate = birthDate;
+    }
+    public  RegisterReq(User user){
+        this.username = user.getUsername();
+        this.password = user.getPassword();
+        this.name = user.getName();
+        this.surname = user.getSurname();
+        this.gender = user.getGenderType();
+        this.birthDate = user.getDateOfBirth();
     }
 
     public String getUsername() {

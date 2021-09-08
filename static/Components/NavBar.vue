@@ -42,7 +42,7 @@
                 <i  class="far fa-user fa-2x"></i>
               </router-link>
               <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                <li><router-link class="dropdown-item" href="#" to="/profile">Profile</router-link></li>
+                <li><router-link class="dropdown-item"  to="/profile">Profile</router-link></li>
                 <li><router-link class="dropdown-item" v-if="role === 'Buyer'" to="/cart">Cart</router-link></li>
                 <li><router-link class="dropdown-item" to="/orders">Orders </router-link></li>
                 <li><hr class="dropdown-divider"></li>

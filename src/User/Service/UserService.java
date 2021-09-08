@@ -39,7 +39,15 @@ public class UserService {
         }
         return user;
     }
-
+    public Optional<User> validateJWT(Request req) {
+        Optional<String> jws = JSONWebTokenUtil.parseJws(req);
+        if(!jws.isPresent()) {
+            return Optional.empty();
+        }
+        String username = JSONWebTokenUtil.getUsername(jws.get());
+        Optional<User> u = getByUsername(username);
+        return u;
+    }
     public Optional<String> loginUser(LogInReq req){
         Optional<User> user = userRepository.get(req.getUsername());
         if(!user.isPresent() || !user.get().getPassword().equals(req.getPassword())){
@@ -84,5 +92,23 @@ public class UserService {
 
     public boolean deleteUser(String username) {
         return userRepository.Delete(username);
+    }
+
+    public boolean updateUser(User user) {
+        return userRepository.Update(user);
+    }
+    public boolean updateUser(RegisterReq req) {
+        Optional<User> u = getByUsername(req.getUsername());
+        if (!u.isPresent()) {
+            return false;
+        }
+        User r = u.get();
+        r.setDateOfBirth(req.getBirthDate());
+        r.setGenderType(req.getGender());
+        r.setName(req.getName());
+        r.setSurname(req.getSurname());
+        if(req.getPassword() != null && !req.getPassword().isBlank() && req.getPassword().length() >= 4)
+            r.setPassword(req.getPassword());
+        return userRepository.Update(r);
     }
 }

@@ -31,14 +31,14 @@ import spark.Session;
 public class Test {
 
     public static Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd").create();
-
+    public static String UPLOAD_DIR = "uploads";
 
     public static void main(String[] args) throws Exception {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         Date dt = new Date(1999,8,23);
         User u1 = new User("boki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Admin);
-
+        new File(UPLOAD_DIR).mkdir();
 
 
 
