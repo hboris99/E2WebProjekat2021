@@ -1,5 +1,5 @@
 <template>
-  <div id="sidebar">
+  <div>
 
     <router-view></router-view>
   </div>

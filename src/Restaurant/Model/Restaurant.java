@@ -27,6 +27,12 @@ public class Restaurant implements IRepository<Integer> {
         this.managerUsername = managerUsername;
     }
 
+    public void addArticle(Article a) {
+        if(!articleList.stream().filter(ar -> ar.getRestaurant().equals(a.getRestaurant())).findFirst().isPresent()) {
+
+            articleList.add(a);
+        }
+    }
     public String getManagerUsername() {
         return managerUsername;
     }
