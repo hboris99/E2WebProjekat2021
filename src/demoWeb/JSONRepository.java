@@ -89,7 +89,7 @@ public class JSONRepository<T extends IRepository<I>, I> {
         List<T> allEntities = null;
         try(FileReader fileReader = new FileReader(file);
             JsonReader jsonReader = new JsonReader(fileReader)) {
-            jsonReader.setLenient(true);
+
             allEntities = gson.fromJson(jsonReader, type);
 
         } catch (IOException e) {

@@ -1,5 +1,6 @@
 package User.Service;
 
+import Restaurant.Model.Restaurant;
 import User.DTO.LogInReq;
 import User.Model.User;
 import User.Model.UserRoleType;
@@ -79,6 +80,7 @@ public class UserService {
             return false;
         }
         Deliverer deliverer = new Deliverer(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
+        System.out.println(deliverer.getClass().getName());
         return userRepository.Create(deliverer);
     }
 
@@ -86,7 +88,10 @@ public class UserService {
         if(getByUsername(req.getUsername()).isPresent()){
             return false;
         }
-        Manager manager = new Manager(req.getUsername(), req.getPassword(),req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
+        User u = new User(req.getUsername(), req.getName(), req.getSurname(), req.getPassword(), req.getGender(), req.getBirthDate(), UserRoleType.Manager);
+        Manager manager = new Manager(u);
+        System.out.println(manager.getClass().getName());
+
         return userRepository.Create(manager);
     }
 
@@ -110,5 +115,49 @@ public class UserService {
         if(req.getPassword() != null && !req.getPassword().isBlank() && req.getPassword().length() >= 4)
             r.setPassword(req.getPassword());
         return userRepository.Update(r);
+    }
+}
+    public boolean blockUser(String username) {
+        Optional<User> u = getByUsername(username);
+        if(!u.isPresent()) {
+            return false;
+        }
+        u.get().setBlocked(true);
+        return updateUser(u.get());
+    }
+    public boolean unblockUser(String username) {
+        Optional<User> u = getByUsername(username);
+        if(!u.isPresent()) {
+            return false;
+        }
+        u.get().setBlocked(false);
+        return updateUser(u.get());
+    }
+    public boolean updateUser(User user) {
+        return userRepository.Update(user);
+    }
+
+    public List<Manager> getRestaurantlessManagers() {
+
+        return   getManagers().stream().filter(m -> m.getRestaurant() == null)
+                .collect(Collectors.toList());
+    }
+    public List<Manager> getManagers() {
+
+
+
+        return getAllUsers().stream().filter(u -> u.getUserRoleType().equals(UserRoleType.Manager)  && u instanceof Manager)
+                .map(u -> (Manager) u)
+                .collect(Collectors.toList());
+    }
+
+    public boolean addRestaurantToManager(String managerUsername, Restaurant restaurant) {
+        Optional<User> u = getByUsername(managerUsername);
+        if(!u.isPresent() || !u.get().getUserRoleType().equals(UserRoleType.Manager)){
+            return false;
+        }
+        Manager m = (Manager) u.get();
+        m.setRestaurant(restaurant);
+        return userRepository.Update(m);
     }
 }
