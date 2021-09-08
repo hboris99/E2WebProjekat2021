@@ -99,9 +99,7 @@ public class UserService {
         return userRepository.Delete(username);
     }
 
-    public boolean updateUser(User user) {
-        return userRepository.Update(user);
-    }
+
     public boolean updateUser(RegisterReq req) {
         Optional<User> u = getByUsername(req.getUsername());
         if (!u.isPresent()) {
@@ -116,7 +114,7 @@ public class UserService {
             r.setPassword(req.getPassword());
         return userRepository.Update(r);
     }
-}
+
     public boolean blockUser(String username) {
         Optional<User> u = getByUsername(username);
         if(!u.isPresent()) {
