@@ -26,6 +26,15 @@ public class Restaurant implements IRepository<Integer> {
         this.logo = logo;
         this.managerUsername = managerUsername;
     }
+    public Restaurant(Integer id, String name ,List<Article> articleList, RestaurantType restaurantType, Location adress, String logo, boolean working) {
+        this.ID = id;
+        this.name = name;
+        this.restaurantType = restaurantType;
+        this.articleList = articleList;
+        this.working = working;
+        this.restaurantLocation = adress;
+        this.logo = logo;
+    }
 
     public void addArticle(Article a) {
         if(!articleList.stream().filter(ar -> ar.getRestaurant().equals(a.getRestaurant())).findFirst().isPresent()) {

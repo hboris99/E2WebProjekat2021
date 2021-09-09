@@ -44,6 +44,7 @@ public class ManagerController {
                 if(m.getRestaurant() == null){
                     return notFound(res);
                 }
+                System.out.println(m.getRestaurant().getArticleList());
                 return gson.toJson(new MRestorauntResponse(m.getRestaurant()));
             } catch(Exception e){
                 e.printStackTrace();
@@ -79,7 +80,8 @@ public class ManagerController {
                         Files.copy(in, out);
                 }
                 ArticleRequest articleRequest = gson.fromJson(req.raw().getParameter("req"), ArticleRequest.class);
-                return restaurantService.createArticle(articleRequest, fileName)
+                Manager m = (Manager) u.get();
+                return restaurantService.createArticle(articleRequest, fileName,m) && userService.updateUser(m)
                         ?ok("Added", res)
                         : badRequest("Failed to add", res);
 

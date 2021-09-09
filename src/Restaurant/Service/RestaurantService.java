@@ -5,6 +5,7 @@ import Restaurant.Model.Article;
 import Restaurant.Model.Restaurant;
 import Restaurant.Repository.RestaurantRepository;
 import User.DTO.ArticleRequest;
+import User.Model.Manager;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,9 +33,9 @@ public class RestaurantService {
         this.currentRestaurant = restaurantRepository.get(id).get();
         return restaurantRepository.get(id);
    }
-    public boolean createArticle(ArticleRequest articleRequest, String fileName) {
+    public boolean createArticle(ArticleRequest articleRequest, String fileName, Manager m) {
         Article a = new Article(articleRequest.getName(), articleRequest.getPrice(), articleRequest.getArticleType(), articleRequest.getQuantity(), articleRequest.getDescription(), fileName, articleRequest.getRestaurant());
-        Restaurant r = getRestaurantByID(articleRequest.getRestaurant()).get();
+        Restaurant r = m.getRestaurant();
 
         Optional<Article> article = r.getArticleList().stream().filter(ar -> ar.getName().equals(articleRequest.getName())).findFirst();
         if(article.isPresent() && !article.get().isDeleted()){
