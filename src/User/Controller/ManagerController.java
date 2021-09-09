@@ -51,7 +51,7 @@ public class ManagerController {
                 return internal(res);
             }
         });
-        get("/manager/restaurant/getarticles", (req, res) -> {
+        /*get("/manager/restaurant/getarticles", (req, res) -> {
             Optional<User> user = userService.validateJWT(req, UserRoleType.Manager);
             if(!user.isPresent()){
                 return forbidden(res);
@@ -59,7 +59,7 @@ public class ManagerController {
             res.type("application/json");
 
             return gson.toJson(restaurantService.getAllArticles());
-        });
+        });*/
         post("/manager/restaurant/article", (req, res)->{
             try{
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
@@ -86,6 +86,27 @@ public class ManagerController {
                         : badRequest("Failed to add", res);
 
             }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+
+        delete("/manager/restaurant/deletearticle/:articleName", (req,res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String articleName = req.params(":articleName");
+                if(articleName == null || articleName.isBlank()){
+                    return badRequest("Invalid article name", res);
+                }
+                Manager m = (Manager) u.get();
+                return restaurantService.deleteArticle(articleName, m) && userService.updateUser(m)
+                        ? ok("Article deleted", res)
+                        : badRequest("Failed to delete", res);
+
+            }catch (Exception e){
                 e.printStackTrace();
                 return internal(res);
             }

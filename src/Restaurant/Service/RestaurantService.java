@@ -28,11 +28,11 @@ public class RestaurantService {
         }
         return Optional.of(r);
     }
-   public Optional<Restaurant> getRestaurantByID(Integer id){
+   /*public Optional<Restaurant> getRestaurantByID(Integer id){
 
         this.currentRestaurant = restaurantRepository.get(id).get();
         return restaurantRepository.get(id);
-   }
+   }*/
     public boolean createArticle(ArticleRequest articleRequest, String fileName, Manager m) {
         Article a = new Article(articleRequest.getName(), articleRequest.getPrice(), articleRequest.getArticleType(), articleRequest.getQuantity(), articleRequest.getDescription(), fileName, articleRequest.getRestaurant());
         Restaurant r = m.getRestaurant();
@@ -55,7 +55,20 @@ public class RestaurantService {
 
     }
 
-    public List<Article> getAllArticles() {
+   /* public List<Article> getAllArticles() {
         return this.currentRestaurant.getArticleList();
+    }*/
+
+    public boolean deleteArticle(String articleName, Manager m) {
+
+        Restaurant r = m.getRestaurant();
+
+        for(Article a : r.getArticleList()){
+            if(a.getName().equals(articleName)){
+                a.setDeleted(true);
+                return restaurantRepository.Update(r);
+            }
+        }
+        return false;
     }
 }
