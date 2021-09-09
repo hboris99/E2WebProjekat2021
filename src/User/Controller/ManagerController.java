@@ -60,6 +60,20 @@ public class ManagerController {
 
             return gson.toJson(restaurantService.getAllArticles());
         });*/
+        get("/manager/restaurant/getarticle/:articleName", (req, res) -> {
+            try {
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if (!u.isPresent()) {
+                    return forbidden(res);
+                }
+                Manager m = (Manager) u.get();
+                String articleName = req.params(":articleName");
+                return gson.toJson(restaurantService.getArticle(articleName, m));
+            }catch(Exception e){
+                e.printStackTrace();
+                return badRequest("Failed to get", res);
+            }
+        });
         post("/manager/restaurant/article", (req, res)->{
             try{
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
@@ -90,7 +104,36 @@ public class ManagerController {
                 return internal(res);
             }
         });
+        post("/manager/restaurant/updatearticle", (req, res)->{
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String location = "image";
+                long maxFileSize = 100000000;
+                long maxReqSize = 1000000000;
+                int filesizeThreshold = 1024;
+                MultipartConfigElement mce = new MultipartConfigElement(location, maxFileSize, maxReqSize, filesizeThreshold);
+                req.raw().setAttribute("org.eclipse.jetty.multipartConfig", mce);
+                Collection<Part> parts  = req.raw().getParts();
+                String fileName = req.raw().getPart("file").getSubmittedFileName();
+                Path out = Paths.get(Test.UPLOAD_DIR  + File.separator + fileName);
+                try(final InputStream in = req.raw().getPart("file").getInputStream()){
+                    if(!Files.exists(out))
+                        Files.copy(in, out);
+                }
+                ArticleRequest articleRequest = gson.fromJson(req.raw().getParameter("req"), ArticleRequest.class);
+                Manager m = (Manager) u.get();
+                return restaurantService.update(articleRequest, fileName,m) && userService.updateUser(m)
+                        ?ok("Added", res)
+                        : badRequest("Failed to add", res);
 
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
         delete("/manager/restaurant/deletearticle/:articleName", (req,res) -> {
             try{
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);

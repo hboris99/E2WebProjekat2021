@@ -71,4 +71,33 @@ public class RestaurantService {
         }
         return false;
     }
+
+    public Article getArticle(String articleName, Manager m) {
+        Restaurant r = m.getRestaurant();
+        for(Article a: r.getArticleList()){
+            if(a.getName().equals(articleName)){
+                return a;
+            }
+        }
+        return null;
+    }
+
+    public boolean update(ArticleRequest articleRequest, String fileName, Manager m) {
+        Restaurant r = m.getRestaurant();
+        if(r == null) {
+            return false;
+        }
+        Optional<Article> a = r.getArticleList().stream().filter(ar -> ar.getName().equals(articleRequest.getName()) && !ar.isDeleted()).findFirst();
+        if(!a.isPresent()) {
+            return false;
+        }
+
+        a.get().setName(articleRequest.getName());
+        a.get().setArticleType(articleRequest.getArticleType());
+        a.get().setQuantity(articleRequest.getQuantity());
+        a.get().setDescription(articleRequest.getDescription());
+        a.get().setPrice(articleRequest.getPrice());
+        a.get().setLogo(fileName);
+        return restaurantRepository.Update(r);
+    }
 }
