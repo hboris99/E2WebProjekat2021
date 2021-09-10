@@ -10,6 +10,7 @@ import User.Model.User;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class OrderService {
@@ -91,5 +92,12 @@ public class OrderService {
 
     public boolean update(Order order) {
        return orderRepository.Update(order);
+    }
+
+    public List<String> getRestaurantCustomerUsernames(String name) {
+        return orderRepository.getAll().stream().collect(Collectors.toMap(
+                Order::getUsername, Function.identity(),
+                (o1, o2) -> o1)).keySet().stream().collect(Collectors.toList());
+
     }
 }

@@ -64,6 +64,17 @@ public class ManagerController {
                 return internal(res);
             }
         });
+        get("/manager/users", (req, res) -> {
+            try {
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if (!u.isPresent()) {
+                    return forbidden(res);
+                }
+                return gson.toJson(userService.getRestaurantCustomers((Manager) u.get()));
+            } catch(Exception e) {
+                return internal(res);
+            }
+        });
         put("/manager/requests", (req, res) -> {
             try{
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);

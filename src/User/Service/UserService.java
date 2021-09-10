@@ -289,4 +289,15 @@ public class UserService {
         }
         return  manager.removeRequest(dr) && userRepository.Update(manager);
     }
+
+    public List<Buyer> getRestaurantCustomers(Manager manager) {
+        Restaurant r = manager.getRestaurant();
+
+        if(r==null){
+            return Collections.emptyList();
+        }
+        return orderService.getRestaurantCustomerUsernames(r.getName()).stream().flatMap(u -> getAllUsers().stream()
+        .filter(us -> us.getUsername().equals(u))
+        .map(user-> (Buyer) user)).collect(Collectors.toList());
+    }
 }

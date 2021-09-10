@@ -2,13 +2,10 @@ package User.Controller;
 
 import Order.Model.Order;
 import Order.Service.OrderService;
-import User.DTO.BuyerReq;
-import User.DTO.CartRequest;
-import User.DTO.LogInReq;
+import User.DTO.*;
 import User.Model.Buyer;
 import User.Model.CartItem;
 import User.Model.User;
-import User.DTO.RegisterReq;
 
 import User.Model.UserRoleType;
 import User.Service.UserService;
@@ -276,9 +273,9 @@ public class UserController {
                     return notFound(res);
                 }
                 if(u.get().getUserRoleType() == UserRoleType.Buyer) {
-                    return gson.toJson(new BuyerReq((Buyer) u.get()));
+                    return gson.toJson(new BuyerResponse((Buyer) u.get()));
                 }
-                return gson.toJson(new RegisterReq(u.get()));
+                return gson.toJson(new UserResponse(u.get()));
             } catch (Exception e) {
                 e.printStackTrace();
                 return internal(res);

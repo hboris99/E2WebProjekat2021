@@ -6,10 +6,10 @@
       <div id="profile-container">
         <div id="profile-profile">
           <input type="file" ref="file" @change="updateProfile" style="display: none">
-          <div v-if="!user.profileImg" class="profile-placeholder" @click="$refs.file.click()">
+          <div v-if="!user.profileImage" class="profile-placeholder" @click="$refs.file.click()">
             +
           </div>
-          <img @click="$refs.file.click()" v-else :src="'http://localhost:8080/image/' + user.profileImg" alt="profile">
+          <img @click="$refs.file.click()" v-else :src="'http://localhost:8080/image/' + user.profileImage" alt="profile">
           <b v-if="user.memberType">{{user.memberType}}</b>
           <b v-if="user.points != null">Points: {{user.points}}</b>
         </div>
