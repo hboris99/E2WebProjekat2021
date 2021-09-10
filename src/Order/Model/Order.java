@@ -139,12 +139,12 @@ public class Order implements IRepository<String> {
 
     @Override
     public String getID() {
-        return null;
+        return id;
     }
 
     @Override
     public void setID(String id) {
-
+        this.id = id;
     }
 
     public boolean isDeleted() {
