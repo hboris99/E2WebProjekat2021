@@ -5,7 +5,7 @@
   <div class="d-flex justify-content-between">
     <form class="row g-3 needs-validation" @submit="newRestaurant" id="sign-in-form" novalidate>
       <div class="form-floating">
-        <input class="form-control" placeholder="Restaurant Name" id="form-name-input" v-model="name" type="text">
+        <input class="form-control" placeholder="Restaurant Name" id="form-name-input" v-model="restaurantname" type="text">
         <label for="form-name-input">Name</label>
 
       </div>
@@ -66,7 +66,7 @@
         <label for="form-password-input">Password</label>
       </div>
       <div class="form-floating">
-        <input class="form-control"  id="form-fname-input" v-model="mname" type="text">
+        <input class="form-control"  id="form-fname-input" v-model="name" type="text">
         <label for="form-fname-input">First Name</label>
       </div>
       <div class="form-floating">
@@ -95,7 +95,7 @@
 module.exports= {
   data: function (){
     return {
-      name:'',
+      restaurantname:'',
       zipcode:'',
       streetAndNumber:'',
       place:'',
@@ -110,7 +110,7 @@ module.exports= {
       lon: '',
       username: '',
       password: '',
-      mname: '',
+      name: '',
       surname: '',
       sex: 'MALE',
       birthDate: '',
@@ -143,7 +143,7 @@ module.exports= {
       console.log(this.place)
       let data = new FormData();
       let req ={
-        name: this.name,
+        name: this.restaurantname,
         restaurantType: this.selectedType,
         managerUsername: this.selectedManager,
         location: {
@@ -190,12 +190,13 @@ module.exports= {
       }
       let registerRequest = {
         username: this.username,
-        mname: this.firstName,
-        surname: this.lastName,
         password: this.password,
-        sex: this.sex,
+        name: this.name,
+        surname: this.surname,
+        gender: this.sex,
         birthDate: this.birthDate,
       };
+      console.log(registerRequest);
       axios.post('/admin/newmanager', registerRequest, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
           .then(() => {
             this.getManagers();

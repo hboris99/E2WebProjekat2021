@@ -80,12 +80,13 @@ module.exports = {
 
       let registerRequest = {
         username: this.username,
-        firstName: this.firstName,
-        lastName: this.lastName,
+        name: this.firstName,
+        surname: this.lastName,
         password: this.password,
         gender: this.gender,
         birthDate:this.birthDate,
       };
+
       await axios.post('/user/register', registerRequest,{headers:{'Authorization': 'Bearer' + localStorage.jws}})
           .then().catch(r => console.log(r));
 

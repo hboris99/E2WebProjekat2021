@@ -5,15 +5,15 @@ import demoWeb.IRepository;
 import java.io.Serializable;
 import java.util.Date;
 
-public class User implements IRepository<String>, Serializable {
-    public String username;
-    public String password;
-    public String name;
-    public String surname;
-    public GenderType genderType;
-    public UserRoleType userRoleType;
-    public Date dateOfBirth;
-    public String profileImage;
+public abstract class User implements IRepository<String>, Serializable {
+    protected  String username;
+    protected  String password;
+    protected  String name;
+    protected  String surname;
+    protected  GenderType genderType;
+    protected  UserRoleType userRoleType;
+    protected  Date dateOfBirth;
+    protected  String profileImage;
 
     public String getProfileImage() {
         return profileImage;
@@ -39,8 +39,8 @@ public class User implements IRepository<String>, Serializable {
         this.deleted = deleted;
     }
 
-    private Boolean isBlocked;
-    private Boolean deleted;
+    protected Boolean isBlocked;
+    protected Boolean deleted;
 
     public User(String username, String password, String name, String surname, GenderType genderType, Date dateOfBirth, UserRoleType userRoleType) {
         this.username = username;

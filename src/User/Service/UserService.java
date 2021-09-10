@@ -99,8 +99,8 @@ public class UserService {
         if(getByUsername(req.getUsername()).isPresent()){
             return false;
         }
-        User u = new User(req.getUsername(), req.getName(), req.getSurname(), req.getPassword(), req.getGender(), req.getBirthDate(), UserRoleType.Manager);
-        Manager manager = new Manager(u);
+
+        Manager manager = new Manager(req.getUsername(), req.getPassword(), req.getName(), req.getSurname(), req.getGender(), req.getBirthDate());
         System.out.println(manager.getClass().getName());
 
         return userRepository.Create(manager);

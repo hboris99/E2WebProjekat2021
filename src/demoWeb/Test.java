@@ -41,7 +41,7 @@ public class Test {
         port(8080);
         staticFiles.externalLocation(new File("./static").getCanonicalPath());
         Date dt = new Date(1999,8,23);
-        User u1 = new User("boki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Admin);
+        //User u1 = new User("boki","boki","boki","boki", GenderType.MALE,dt, UserRoleType.Admin);
         new File(UPLOAD_DIR).mkdir();
 
 

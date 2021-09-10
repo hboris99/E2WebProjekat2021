@@ -38,11 +38,11 @@
       </div>
       </div>
       <div class="row row-cols-1 row-cols-3 g-2">
-        <div class="col" v-for="result in sortedResults">
+        <div class="col" v-for="result in sortedResults" :key="result.id">
           <div class="card  text-white bg-dark">
             <div class="card-body">
             <h5 class="card-title">{{result.id}} {{result.date}} {{result.status}}</h5>
-            <p class="card-text">Restaurant: {{result.resaurant.name}} ({{result.restaurant.restaurantType}})
+            <p class="card-text">Restaurant: {{result.restaurant.name}} ({{result.restaurant.restaurantType}})
               Adress: {{result.restaurant.restaurantLocation.adress.place}}, {{result.restaurant.restaurantLocation.adress.streetAndNumber}}, {{result.restaurant.restaurantLocation.adress.zipcode}}
             </p>
             <div class="btn-group" role="group">
@@ -66,7 +66,7 @@ module.exports = {
   data() {
     return{
       role: '',
-      underlivered: false,
+      undelivered: false,
       selectedStatus: '',
       selectedType: '',
       fromDate: '',
@@ -136,14 +136,15 @@ module.exports = {
         return 0;
       });
       if (this.selectedType) {
-        res = res.filter(r => r.restaurant.restType == this.selectedType);
+        res = res.filter(r => r.restaurant.restaurantType == this.selectedType);
       }
       if (this.selectedStatus) {
-        res = res.filter(r => r.status == this.selectedStatus);
+        res = res.filter(r => r.stats == this.selectedStatus);
       }
       if (this.undelivered) {
-        res = res.filter(r => r.status != 'DELIVERED');
+        res = res.filter(r => r.stats != 'Delivered');
       }
+      console.log(res);
       return res;
     },
     sortSymbol: function () {

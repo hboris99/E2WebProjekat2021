@@ -23,7 +23,7 @@ public class RestaurantService {
 
     public Optional<Restaurant> createRestaurant(RestaurantRequest restaurantRequest, String filename) throws IOException {
         System.out.println(restaurantRequest.getName());
-        Restaurant r = new Restaurant(restaurantRequest.getName(), restaurantRequest.getRestaurantType(), false, restaurantRequest.getLocation(), filename, 0);
+        Restaurant r = new Restaurant(restaurantRequest.getName(), restaurantRequest.getRestaurantType(), true, restaurantRequest.getLocation(), filename, 0);
         r.setManagerUsername(restaurantRequest.getManagerUsername());
         Integer id = restaurantRepository.getNextID();
         r.setID(id);
