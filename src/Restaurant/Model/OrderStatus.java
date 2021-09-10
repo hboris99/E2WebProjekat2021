@@ -1,5 +1,0 @@
-package Restaurant.Model;
-
-public enum OrderStatus {
-    PROCESSING,PREPARATION,WAITINGFORDELIVERER,ONTHEWAY,DELIVERED,CANCELED
-}

@@ -1,5 +1,6 @@
 package User.Controller;
 
+import Order.Service.OrderService;
 import Restaurant.DTO.RestaurantRequest;
 import Restaurant.Model.Article;
 import Restaurant.Service.RestaurantService;
@@ -28,10 +29,12 @@ import static demoWeb.Test.gson;
 public class ManagerController {
     private UserService userService;
     private RestaurantService restaurantService;
+    private OrderService orderService;
 
-    public ManagerController(UserService userService, RestaurantService restaurantService){
+    public ManagerController(UserService userService, RestaurantService restaurantService, OrderService orderService){
         this.userService = userService;
         this.restaurantService = restaurantService;
+        this.orderService = orderService;
 
         get("/manager/restaurant", (req, res)->{
             try{
@@ -94,8 +97,9 @@ public class ManagerController {
                         Files.copy(in, out);
                 }
                 ArticleRequest articleRequest = gson.fromJson(req.raw().getParameter("req"), ArticleRequest.class);
+                System.out.println(articleRequest.getName());
                 Manager m = (Manager) u.get();
-                return restaurantService.createArticle(articleRequest, fileName,m) && userService.updateUser(m)
+                return restaurantService.createArticle(m.getRestaurant().getID(), articleRequest, fileName,m) && userService.updateUser(m)
                         ?ok("Added", res)
                         : badRequest("Failed to add", res);
 

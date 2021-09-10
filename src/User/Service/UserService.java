@@ -1,6 +1,11 @@
 package User.Service;
 
+import Order.Model.Order;
+import Order.Service.OrderService;
+import Restaurant.Model.Article;
 import Restaurant.Model.Restaurant;
+import Restaurant.Service.RestaurantService;
+import User.DTO.CartRequest;
 import User.DTO.LogInReq;
 import User.Model.User;
 import User.Model.UserRoleType;
@@ -10,6 +15,7 @@ import User.Repository.UserRepository;
 import demoWeb.JSONWebTokenUtil;
 import spark.Request;
 
+import java.util.Collections;
 import java.util.List;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,9 +28,14 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private UserRepository userRepository;
+    private RestaurantService restaurantService;
+    private OrderService orderService;
 
-    public UserService(UserRepository userRepository){
+    public UserService(UserRepository userRepository, RestaurantService restaurantService, OrderService orderService){
+
+        this.restaurantService = restaurantService;
         this.userRepository = userRepository;
+        this.orderService = orderService;
     }
 
 
@@ -157,5 +168,69 @@ public class UserService {
         Manager m = (Manager) u.get();
         m.setRestaurant(restaurant);
         return userRepository.Update(m);
+    }
+
+    public boolean addToCart(Buyer buyer, List<CartRequest> products, String restaurantName) {
+        List<Article> articles = restaurantService.getArticlesByRestaurantName(restaurantName);
+        List<CartItem> newItems;
+
+        double discountModifier = 1.0;
+        if(buyer.getBuyerType().getBuyerTypeRank().equals(BuyerTypeRank.Silver)){
+            discountModifier = 0.95;
+        }
+        if(buyer.getBuyerType().getBuyerTypeRank().equals(BuyerTypeRank.Gold)){
+            discountModifier = 90;
+        }
+        if(buyer.getBuyerType().getBuyerTypeRank().equals(BuyerTypeRank.Platinum)){
+            discountModifier = 85;
+        }
+        final double finalM = discountModifier;
+
+        newItems = products.stream().flatMap(i -> articles.stream().filter(a -> a.getName().equals(i.getArticleName()))
+
+                    .map(ci -> new CartItem(ci, i.getAmmount())))
+                .collect(Collectors.toList());
+
+        newItems.forEach(newItem -> {
+            newItem.getArticle().setPrice(newItem.getArticle().getPrice() * finalM);
+            buyer.getCart().addArticle(newItem);
+        });
+
+        buyer.getCart().setRestaurantName(restaurantName);
+        return userRepository.Update(buyer);
+    }
+
+    public boolean removeFromCart(Buyer buyer, String name) {
+        return buyer.getCart().removeArticle(name) && updateUser(buyer);
+    }
+    public List<Order> getUserOrders(User user) {
+        switch(user.getUserRoleType()){
+            case Buyer:{
+                    return orderService.getByUsername(user.getUsername());
+            }
+            case Manager:{
+                return orderService.getByManagerUsername(user.getUsername());
+            }
+            case Deliverer:
+                return orderService.getByDelivererUsername(user.getUsername());
+        }
+        return Collections.emptyList();
+
+    }
+
+    public boolean createOrder(Buyer bueyr) {
+        String restaurant = bueyr.getCart().getRestaurantName();
+        if(restaurant == null || restaurant.isBlank()){
+            return false;
+        }
+        Optional<Restaurant> rest = restaurantService.getByName(restaurant);
+        if(!rest.isPresent()){
+            return false;
+        }
+        bueyr.addOrder(orderService.createOrder(bueyr.getCart(), rest.get(), bueyr.getUsername(), bueyr.getName(), bueyr.getSurname()));
+        bueyr.addPoints(bueyr.getCart().getPrice()/ 920 * 100);
+        bueyr.getCart().clear();
+
+        return userRepository.Update(bueyr);
     }
 }

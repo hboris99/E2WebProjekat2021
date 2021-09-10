@@ -163,6 +163,7 @@ data: function(){
         description: this.articleToUpdate.description,
       }
       data.append('req', JSON.stringify(req));
+      console.log(req);
       console.log(this.file)
       console.log(this.articleToUpdate.logo)
 

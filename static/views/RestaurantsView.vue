@@ -42,7 +42,7 @@
                   Average review: {{restaurant.avgPoints}}
                 </p>
                 <div >
-                <button   class="btn btn-secondary">More details</button>
+                  <button v-if="jws"  class="btn btn-secondary"><router-link :to="'/restaurant/' + restaurant.name">More details</router-link></button>
               </div>
             </div>
             </div>
@@ -69,6 +69,10 @@ module.exports=
         }
       },
       methods:{
+        printRestaurantName: function(name){
+          this.$store.commit('changeRestaurant', name);
+          this.$router.push('/selectedrestaurant');
+        },
         handleInput(value){
           this.vCode = value;
 
@@ -127,6 +131,9 @@ module.exports=
         },
           },
         computed :{
+          jws: function (){
+            return localStorage.jws;
+          },
           filteredRestaurants: function (){
             return this.getFilteredByType(this.getFilteredByAvail(this.restaurants,this.selectedAvailability),this.selectedType);
           },

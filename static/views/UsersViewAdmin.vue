@@ -21,10 +21,10 @@
       <p @click="sort('username')">Username<span v-if="sortBy == 'username'" v-html="sortSymbol"></span></p>
       </div>
       <div class="col ">
-      <p @click="sort('name')">First name<span v-if="sortBy == 'firstName'" v-html="sortSymbol"></span></p>
+      <p @click="sort('name')">First name<span v-if="sortBy == 'name'" v-html="sortSymbol"></span></p>
       </div>
       <div class="col ">
-      <p @click="sort('surname')">Last name<span v-if="sortBy == 'lastName'" v-html="sortSymbol"></span></p>
+      <p @click="sort('surname')">Last name<span v-if="sortBy == 'surname'" v-html="sortSymbol"></span></p>
       </div>
       <div class="col ">
       <p @click="sort('points')">Points<span v-if="sortBy == 'points'" v-html="sortSymbol"></span></p>

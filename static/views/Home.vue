@@ -2,6 +2,8 @@
   <div>
       <custom-nav-bar >
       </custom-nav-bar>
+    <router-view></router-view>
+
     <div id="top-view">
       <div id="container" class="container  pt-3">
         <div id="text-box" class="border-0   rounded shadow ">

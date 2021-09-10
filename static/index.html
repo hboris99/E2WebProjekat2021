@@ -3,14 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Runeterra's food emporium</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/css/ol.css" type="text/css">
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/build/ol.js"></script>
 </head>
 <body>
 <div id="app">
     <router-view></router-view>
 </div>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/css/ol.css" type="text/css">
-<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.6.1/build/ol.js"></script>
+
 <script src ="frontLib/moment.js"></script>
+<script src ="frontLib/vuex.js"></script>
+
 <script src="frontLib/vue.js"></script>
 <script src="frontLib/vue-router.js"></script>
 <script src="frontLib/axios.js"></script>
@@ -25,6 +28,7 @@
 
     Vue.component('custom-nav-bar', httpVueLoader('Components/NavBar.vue'));
     Vue.component('geosearch', httpVueLoader('Components/GeoSearch.vue'))
+    Vue.use(Vuex);
     const routes = [
         {
             path: '/',
@@ -44,14 +48,36 @@
                     }).catch(()=> next({name:'Home'}));
                     next({name: 'Home'});
                 } else {
-                    next({name: 'Home'});
+                    next({name: 'RestaurantsView'});
                 }
             },
         },
+
+
+                {
+                    path: '/home',
+                    name: 'Home',
+                    component: httpVueLoader('views/Home.vue'),
+                },
         {
-            path:'/home',
-            name: 'Home',
-            component: httpVueLoader('views/Home.vue'),
+            path: '/restaurant/:name',
+            name: 'Restaurant',
+            component: httpVueLoader('views/RestaurantView.vue'),
+        },
+        {
+          path: '/orders',
+          name: 'Orders',
+          component: httpVueLoader('views/Orders.vue'),
+        },
+        {
+          path: '/cart',
+          name: 'Cart',
+            component: httpVueLoader('views/Cart.vue'),
+        },
+        {
+            path: '/order/:name',
+            name: 'Order',
+            component: httpVueLoader('views/Order.vue'),
         },
         {
             path: '/signin',
@@ -123,7 +149,16 @@
 
 
     ];
-
+    const store = new Vuex.Store({
+        state:{
+            selectedRestaurant: ''
+        },
+        mutations:{
+            changeRestaurant(state, restaurant){
+                state.selectedRestaurant = restaurant;
+            }
+        }
+    })
     const router = new VueRouter({
 
         routes: routes,
@@ -132,6 +167,7 @@
     new Vue({
         el: '#app',
         router: router,
+        store: store,
         methods: {
 
         }

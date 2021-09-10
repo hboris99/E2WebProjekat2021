@@ -7,14 +7,14 @@ public class CartItem {
     private double quantity;
     private Article article;
 
-    public CartItem(double price, double quantity, Article article) {
-        this.price = price;
+    public CartItem( Article article, double quantity) {
+        this.price = article.getPrice() * quantity;
         this.quantity = quantity;
         this.article = article;
     }
 
     public double getPrice() {
-        return price;
+        return article.getPrice() * quantity;
     }
 
     public void setPrice(double price) {

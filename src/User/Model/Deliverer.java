@@ -1,9 +1,10 @@
 package User.Model;
 
+import Order.Model.Order;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import Restaurant.Model.Order;
 
 public class Deliverer extends User {
 

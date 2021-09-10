@@ -1,5 +1,6 @@
 package User.Controller;
 
+import Order.Service.OrderService;
 import Restaurant.DTO.RestaurantRequest;
 import Restaurant.Model.Restaurant;
 import Restaurant.Service.RestaurantService;
@@ -36,6 +37,7 @@ public class AdminController {
     public AdminController(UserService userService, RestaurantService restaurantService) {
         this.userService = userService;
         this.restaurantService = restaurantService;
+
         get("/admin/users", (req, res) ->{
 
                 Optional<User> user = userService.validateJWT(req, UserRoleType.Admin);

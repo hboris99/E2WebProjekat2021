@@ -69,11 +69,12 @@ module.exports = {
       let data = new FormData()
       let req = {
         name: this.articleName,
-        price: this.price,
+        price: this.articlePrice,
         articleType: this.articleType,
         quantity: this.articleQuantity,
         description: this.articleDescription,
       }
+      console.log(req);
       data.append('req', JSON.stringify(req));
       data.append('file', this.file);
       let config = {

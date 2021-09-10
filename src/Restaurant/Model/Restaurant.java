@@ -39,8 +39,8 @@ public class Restaurant implements IRepository<Integer> {
     }
 
     public void addArticle(Article a) {
-        if(!articleList.stream().filter(ar -> ar.getRestaurant().equals(a.getRestaurant())).findFirst().isPresent()) {
-
+        if(!articleList.stream().filter(ar -> ar.getName().equals(a.getName())).findFirst().isPresent()) {
+            System.out.println("DODAJE ARTIKAL");
             articleList.add(a);
         }
     }

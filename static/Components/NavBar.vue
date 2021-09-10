@@ -9,7 +9,7 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0 ">
             <li class="nav-item">
-              <router-link class="nav-link active"  to="/restaurants">Restaurants</router-link>
+              <router-link class="nav-link active" to="/restaurants">Restaurants</router-link>
             </li>
             <div v-if="role === 'Manager'" class="navbar-nav me-auto mb-2 mb-lg-0 ">
               <li class="nav-item">
@@ -95,8 +95,7 @@ module.exports=
             this.$router.push('/')
             return;
           }
-          console.log(localStorage.jws)
-          console.log('Ipak ima jws???')
+
           axios.get('/user/role', {headers: {'Authorization': 'Bearer' + localStorage.jws}}).then(r => this.role = r.data);
         },
         logout: function () {

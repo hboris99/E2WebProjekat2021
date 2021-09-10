@@ -50,12 +50,16 @@ public class Buyer extends User {
         super(username, password, name, surname, genderType, dateOfBirth, UserRoleType.Buyer);
         this.points = 0.0;
         this.buyerType = new BuyerType(BuyerTypeRank.Bronze,0,3000);
-        this.cart = new Cart();
+        this.cart = new Cart(username);
         orderList = new ArrayList<String>();
 
     }
 
-
+    public void addOrder(String orderId) {
+        if(!orderList.contains(orderId)) {
+            orderList.add(orderId);
+        }
+    }
 
     public List<String> getOrderList() {
         return orderList;
@@ -87,5 +91,17 @@ public class Buyer extends User {
 
     public void setBuyerType(BuyerType buyerType) {
         this.buyerType = buyerType;
+    }
+
+    public void addPoints(double v) {
+        points += v;
+        if(points >= 4500 && points < 8000){
+            buyerType.setBuyerTypeRank(BuyerTypeRank.Silver);
+        }
+        if(points >= 8000 && points < 15000){
+            buyerType.setBuyerTypeRank(BuyerTypeRank.Gold);
+        }if(points >= 15000){
+            buyerType.setBuyerTypeRank(BuyerTypeRank.Platinum);
+        }
     }
 }
