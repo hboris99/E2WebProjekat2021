@@ -14,6 +14,7 @@ import Restaurant.Controller.RestaurantController;
 import Restaurant.Repository.RestaurantRepository;
 import Restaurant.Service.RestaurantService;
 import User.Controller.AdminController;
+import User.Controller.DelivererController;
 import User.Controller.ManagerController;
 import User.Controller.UserController;
 import User.Model.*;
@@ -51,10 +52,12 @@ public class Test {
         OrderRepository orderRepository = new OrderRepository("orders.json");
         OrderService orderService = new OrderService(orderRepository);
         RestaurantService restaurantService = new RestaurantService(restaurantRepository);
+        UserService userService = new UserService(userRepository, restaurantService, orderService);
+
         //userRepository.LoadAdminUsers("adminUsers.json");
+        DelivererController delivererController = new DelivererController(userService, orderService);
         RestaurantController restaurantController = new RestaurantController(restaurantService);
         ImageController imageController = new ImageController(UPLOAD_DIR);
-        UserService userService = new UserService(userRepository, restaurantService, orderService);
         ManagerController managerController = new ManagerController(userService, restaurantService,orderService);
         AdminController adminController = new AdminController(userService, restaurantService);
         UserController userController = new UserController(userService,orderService);

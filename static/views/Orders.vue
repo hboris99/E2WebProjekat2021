@@ -82,6 +82,51 @@ module.exports = {
     }
   },
   methods: {
+    cancelOrder: function (id){
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+      }
+
+      axios.delete('/user/order/' + id,{headers: {'Authorization': 'Bearer ' + localStorage.jws}} )
+      .then(() => this.getOrders()).catch(r => console.log(r));
+    },
+    waitOrder: function (id){
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+      }
+      axios.put('/manager/order/wait', id,{headers: {'Authorization': 'Bearer ' + localStorage.jws}} )
+          .then(() => this.getOrders()).catch(r => console.log(r));
+    },
+
+    requestOrder: function (id){
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+
+      }
+      axios.put('/deliverer/request', id,{headers: {'Authorization': 'Bearer' + localStorage.jws}} )
+          .then(() => this.getOrders()).catch(r => console.log(r));
+    },
+    deliverOrder: function (id){
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+
+      }
+      axios.put('/deliverer/deliver', id,{headers: {'Authorization': 'Bearer' + localStorage.jws}} )
+          .then(() => this.getOrders()).catch(r => console.log(r));
+    },
+    prepareOrder: function (id){
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+
+      }
+      axios.put('/manager/order/prepare', id,{headers: {'Authorization': 'Bearer' + localStorage.jws}} )
+          .then(() => this.getOrders()).catch(r => console.log(r));
+    },
     getRole: function () {
       if (!localStorage.jws) {
         return;

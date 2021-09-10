@@ -16,7 +16,7 @@
                 <router-link class="nav-link active"  to="/manager">Your restaurant</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link active"  to="/manager/restaurantorders">All orders</router-link>
+                <router-link class="nav-link active"  to="/manager/requests">Delivery Requests</router-link>
               </li>
               <li class="nav-item">
                 <router-link class="nav-link active"  to="/manager/customers">Our customers</router-link>

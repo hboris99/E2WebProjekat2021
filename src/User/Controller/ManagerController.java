@@ -6,6 +6,7 @@ import Restaurant.Model.Article;
 import Restaurant.Service.RestaurantService;
 import User.DTO.ArticleRequest;
 import User.DTO.MRestorauntResponse;
+import User.Model.DeliveryRequest;
 import User.Model.Manager;
 import User.Model.User;
 import User.Model.UserRoleType;
@@ -35,7 +36,77 @@ public class ManagerController {
         this.userService = userService;
         this.restaurantService = restaurantService;
         this.orderService = orderService;
-
+        get("/manager/requests", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                Manager m = (Manager) u.get();
+                return gson.toJson(m.getRequests());
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+        post("/manager/requests", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                DeliveryRequest dr = gson.fromJson(req.body(), DeliveryRequest.class);
+                return userService.approveOrder((Manager) u.get(), dr)
+                        ? ok("Approver", res)
+                        : badRequest("Nope", res);
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+        put("/manager/requests", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                DeliveryRequest dr = gson.fromJson(req.body(), DeliveryRequest.class);
+                return userService.declineRequest((Manager) u.get(), dr);
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+        put("/manager/order/prepare", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String id = req.body();
+                return orderService.toPrepare(id)
+                        ?ok("Preparing", res)
+                        : badRequest("Cant change", res);
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+        put("/manager/order/wait", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String id = req.body();
+                return orderService.toWaiting(id)
+                        ?ok("Waiting", res)
+                        : badRequest("Cant change", res);
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
         get("/manager/restaurant", (req, res)->{
             try{
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);

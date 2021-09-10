@@ -9,6 +9,7 @@ import User.Model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class OrderService {
@@ -41,5 +42,54 @@ public class OrderService {
         orderRepository.Create(order);
         return orderID;
 
+    }
+
+    public double cancel(String id) {
+        Optional<Order> o = orderRepository.get(id);
+        if(!o.isPresent()){
+            return -1.0;
+        }
+        o.get().setStats(OrderStatusType.Canceled);
+        return orderRepository.Update(o.get())
+                ? o.get().getPrice()
+                : -1.0;
+    }
+
+    public boolean toPrepare(String id) {
+        Optional<Order> o = orderRepository.get(id);
+        if(!o.isPresent() || o.get().getStats().equals(OrderStatusType.Preparing)){
+            return false;
+        }
+        o.get().setStats(OrderStatusType.Preparing);
+        return orderRepository.Update(o.get());
+
+    }
+
+    public boolean toWaiting(String id) {
+        Optional<Order> o = orderRepository.get(id);
+        if(!o.isPresent() || o.get().getStats().equals(OrderStatusType.Waiting)){
+            return false;
+        }
+        o.get().setStats(OrderStatusType.Waiting);
+        return orderRepository.Update(o.get());
+    }
+
+
+
+    public boolean deliverOrder(String id) {
+        Optional<Order> o = orderRepository.get(id);
+
+        if(!o.isPresent() || o.get().getStats().equals(OrderStatusType.Delivered)){
+            return false;
+        }
+        o.get().setStats(OrderStatusType.Delivered);
+        return orderRepository.Update(o.get());
+    }
+    public Optional<Order> get(String id) {
+        return orderRepository.get(id);
+    }
+
+    public boolean update(Order order) {
+       return orderRepository.Update(order);
     }
 }

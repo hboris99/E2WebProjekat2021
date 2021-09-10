@@ -104,4 +104,7 @@ public class Buyer extends User {
             buyerType.setBuyerTypeRank(BuyerTypeRank.Platinum);
         }
     }
+    public  void subPoints(double v){
+        points -= v;
+    }
 }

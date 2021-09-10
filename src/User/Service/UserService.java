@@ -1,6 +1,7 @@
 package User.Service;
 
 import Order.Model.Order;
+import Order.Model.OrderStatusType;
 import Order.Service.OrderService;
 import Restaurant.Model.Article;
 import Restaurant.Model.Restaurant;
@@ -228,9 +229,64 @@ public class UserService {
             return false;
         }
         bueyr.addOrder(orderService.createOrder(bueyr.getCart(), rest.get(), bueyr.getUsername(), bueyr.getName(), bueyr.getSurname()));
-        bueyr.addPoints(bueyr.getCart().getPrice()/ 920 * 100);
+        bueyr.addPoints(bueyr.getCart().getPrice()/ 1000 * 133);
         bueyr.getCart().clear();
 
         return userRepository.Update(bueyr);
+    }
+
+    public boolean cancelOrder(Buyer buyer, String id) {
+        double orPrice = orderService.cancel(id);
+        if(orPrice <= 0.0){
+            return false;
+        }
+        buyer.subPoints(orPrice /1000 * 133 * 4);
+        buyer.increaseOrderCancelCount();
+        return updateUser(buyer);
+    }
+
+    public boolean requestOrder(Deliverer deliverer, String id) {
+        Optional<Order> o = orderService.get(id);
+        if(!o.isPresent() || !o.get().getStats().equals(OrderStatusType.Waiting)){
+            return false;
+        }
+
+        Optional<User> u = getByUsername(o.get().getRestaurant().getManagerUsername());
+        if(!u.isPresent() || !u.get().getUserRoleType().equals(UserRoleType.Manager)){
+            return false;
+        }
+        Manager m = (Manager) u.get();
+        m.addDeliveryRequest(new DeliveryRequest(id, deliverer.getUsername()));
+        return updateUser(m);
+
+
+    }
+
+    public boolean approveOrder(Manager manager, DeliveryRequest dr) {
+        Optional<Order> o = orderService.get(dr.getOrderId());
+        if(!o.isPresent() || !o.get().getStats().equals(OrderStatusType.Waiting)){
+            return false;
+        }
+        Optional<User> u = getByUsername(dr.getUsername());
+        if(!u.isPresent()){
+            return false;
+        }
+        Deliverer d = (Deliverer) u.get();
+        o.get().setStats(OrderStatusType.Transport);
+        o.get().setDelivererUsername(d.getUsername());
+        d.addOrder(o.get().getID());
+        manager.removeRequest(dr);
+        return updateUser(manager) && updateUser(d) && orderService.update(o.get());
+
+
+
+    }
+
+    public Object declineRequest(Manager manager, DeliveryRequest dr) {
+        Optional<User> u = getByUsername(dr.getUsername());
+        if(!u.isPresent()){
+            return false;
+        }
+        return  manager.removeRequest(dr) && userRepository.Update(manager);
     }
 }

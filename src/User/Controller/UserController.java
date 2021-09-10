@@ -146,6 +146,25 @@ public class UserController {
                 return internal(res);
             }
         });
+        delete("/user/order/:id", (req,res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Buyer);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+
+                String id = req.params(":id");
+                if(id == null || id.isBlank()){
+                    return badRequest("Bad id", res);
+                }
+                return userService.cancelOrder((Buyer) u.get(), id)
+                        ? ok("Canceled", res)
+                        : badRequest("Cant cancel", res);
+            }catch (Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
         post("/user/order", (req, res) -> {
             try {
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Buyer);

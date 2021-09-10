@@ -111,11 +111,12 @@
                   </div>
                 </div>
               </div>
-              <div class="card">
-                <router-link to="/manager/newarticle">
-              <img class="card-img" src="images/add.png">
-                </router-link>
+
               </div>
+            <div class="card">
+              <router-link to="/manager/newarticle">
+                <img class="card-img" src="images/add.png">
+              </router-link>
              </div>
 
 
