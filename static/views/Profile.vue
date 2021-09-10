@@ -2,9 +2,9 @@
   <div>
     <custom-nav-bar>
     </custom-nav-bar>
-    <div id="userinfo-main">
-      <div id="userinfo-container">
-        <div id="userinfo-profile">
+    <div id="profile-main">
+      <div id="profile-container">
+        <div id="profile-profile">
           <input type="file" ref="file" @change="updateProfile" style="display: none">
           <div v-if="!user.profileImg" class="profile-placeholder" @click="$refs.file.click()">
             +
@@ -13,17 +13,17 @@
           <b v-if="user.memberType">{{user.memberType}}</b>
           <b v-if="user.points != null">Points: {{user.points}}</b>
         </div>
-        <div id="userinfo">
-          <h2>{{user.username}}</h2>
-          <form id="userinfo-form" @submit.prevent>
-            <div id="userinfo-form-container">
+        <div id="profile">
+          <h2>Informacije o {{user.username}} korisniku</h2>
+          <form id="profile-form" @submit.prevent>
+            <div id="profile-form-container">
               <div class="form-field">
-                <label>First name</label>
+                <label>Name</label>
                 <b class="error">{{errors.name}}</b>
                 <input type="text" v-model="user.name">
               </div>
               <div class="form-field">
-                <label>Last name</label>
+                <label>Surname</label>
                 <b class="error">{{errors.surname}}</b>
                 <input type="text" v-model="user.surname">
               </div>
@@ -38,8 +38,8 @@
                 <input type="password" v-model="newPassword">
               </div>
               <div class="form-field">
-                <label>Sex</label>
-                <select v-model="user.sex">
+                <label>Gender</label>
+                <select v-model="user.gender">
                   <option value="MALE">Male</option>
                   <option value="FEMALE">Female</option>
                   <option value="OTHER">Other</option>
@@ -52,9 +52,9 @@
               </div>
             </div>
             <div class="spacer"></div>
-            <div class="form-field">
+            <div class="form-field" id="updateButton">
               <b class="error">{{errors.update}}</b>
-              <button class="button-primary" @click="updateInfo">Update info</button>
+              <button class="button-primary"  @click="updateInfo">Update info</button>
             </div>
           </form>
 
@@ -69,14 +69,14 @@ module.exports = {
   data() {
     return {
       user: {
-        username: 'ppetrovic',
-        password: 'ppetrovic',
-        name: 'Petar',
-        surname: 'Petrovic',
-        sex: 'MALE',
+        username: '',
+        password: '',
+        name: '',
+        surname: '',
+        gender: 'MALE',
         birthDate: '',
       },
-      oldPassword: 'ppetrovic',
+      oldPassword: '',
       newPassword: '',
       errors: {
         username: '',
@@ -105,7 +105,7 @@ module.exports = {
         }
       };
       axios.post('/user/profile', data, config)
-          .then(() => this.$router.go(0))
+          .then(() => this.$router.go(this.$router.currentRoute))
           .catch(r => console.log(r));
     },
     getUser: function() {
@@ -124,8 +124,8 @@ module.exports = {
     },
     validateInputs: function() {
       let usernameValid = !!this.user.username;
-      let oldPasswordValid = !!this.oldPassword && this.oldPassword.length >= 8;
-      let newPasswordValid = !this.newPassword || this.newPassword.length >= 8;
+      let oldPasswordValid = !!this.oldPassword && this.oldPassword.length >= 4;
+      let newPasswordValid = !this.newPassword || this.newPassword.length >= 4;
       let nameValid = !!this.user.name;
       let surnameValid = !!this.user.surname;
       let birthDateValid = !!this.user.birthDate || new Date(Date.parse(this.user.birthDate)) > new Date();
@@ -148,10 +148,10 @@ module.exports = {
         name: this.user.name,
         surname: this.user.surname,
         birthDate: this.user.birthDate,
-        sex: this.user.sex,
+        gender: this.user.gender,
       };
       axios.post('/user/update', data, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
-          .then(() => this.$router.go(0))
+          .then(() => this.$router.go(this.$router.currentRoute))
           .catch(() => this.errors.update = 'Could not update user info!');
     },
   },
@@ -162,44 +162,47 @@ module.exports = {
 </script>
 
 <style scoped>
-#userinfo-main {
+#profile-main {
   display: grid;
   place-items: center;
   height: 92vh;
-  
+  background: rgba(60,136,240,0.74) ;
 }
-#userinfo-container {
+#profile-container {
   display: grid;
   grid-template-columns: 1fr auto;
   background: #fff;
-  border: solid 1px #eee;
-  padding: 20px;
+  border: solid 1px rgba(132,132,132,0.59) ;
+  padding: 40px;
   min-height: 70vh;
   gap: 20px;
 }
-#userinfo-profile {
+#profile-profile {
   display: flex;
   flex-direction: column;
 }
-#userinfo-profile img {
+#profile-profile img {
   cursor: pointer;
   width: 128px;
   height: 128px;
   margin-bottom: 20px;
 }
-#userinfo {
+#profile {
   display: flex;
   flex-direction: column;
 }
-#userinfo-form {
+#profile-form {
   display: flex;
   flex-direction: column;
   height: 100%;
   padding: 10px;
 }
-#userinfo-form-container {
+#updateButton{
+  padding: 30px;
+}
+#profile-form-container {
   display: grid;
-  gap: 10px;
+  gap: 40px;
   grid-template-columns: 1fr 1fr;
 }
 .form-field {
@@ -214,6 +217,6 @@ module.exports = {
   width: 128px;
   height: 128px;
   cursor: pointer;
-  background: #eee;
+  background: #eeeeee;
 }
 </style>

@@ -15,9 +15,10 @@ public class Restaurant implements IRepository<Integer> {
     private Location restaurantLocation;
     private String logo;
     private boolean isDeleted;
+    private float avgPoints;
 
 
-    public Restaurant(String name, RestaurantType restaurantType, boolean working, Location restaurantLocation, String logo) {
+    public Restaurant(String name, RestaurantType restaurantType, boolean working, Location restaurantLocation, String logo,float avgPoints) {
         this.name = name;
         this.restaurantType = restaurantType;
         this.articleList = new ArrayList<Article>();
@@ -25,6 +26,7 @@ public class Restaurant implements IRepository<Integer> {
         this.restaurantLocation = restaurantLocation;
         this.logo = logo;
         this.managerUsername = managerUsername;
+        this.avgPoints=avgPoints;
     }
 
     public String getManagerUsername() {
@@ -35,6 +37,13 @@ public class Restaurant implements IRepository<Integer> {
         this.managerUsername = managerUsername;
     }
 
+    public float getAvgPoints() {
+        return avgPoints;
+    }
+
+    public void setAvgPoints(float avgPoints) {
+        this.avgPoints = avgPoints;
+    }
 
     public String getName() {
         return name;
