@@ -11,6 +11,7 @@ import java.util.Date;
 import Restaurant.Repository.RestaurantRepository;
 import Restaurant.Service.RestaurantService;
 import User.Controller.AdminController;
+import User.Controller.ManagerController;
 import User.Controller.UserController;
 import User.Model.*;
 import User.Repository.UserRepository;
@@ -46,8 +47,9 @@ public class Test {
         RestaurantRepository restaurantRepository = new RestaurantRepository("restoraunts.json");
         RestaurantService restaurantService = new RestaurantService(restaurantRepository);
         //userRepository.LoadAdminUsers("adminUsers.json");
-
+        ImageController imageController = new ImageController(UPLOAD_DIR);
         UserService userService = new UserService(userRepository);
+        ManagerController managerController = new ManagerController(userService, restaurantService);
         AdminController adminController = new AdminController(userService, restaurantService);
         UserController userController = new UserController(userService);
        

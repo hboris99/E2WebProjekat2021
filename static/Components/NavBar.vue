@@ -11,6 +11,17 @@
             <li class="nav-item">
               <router-link class="nav-link active"  to="/restaurants">Restaurants</router-link>
             </li>
+            <div v-if="role === 'Manager'" class="navbar-nav me-auto mb-2 mb-lg-0 ">
+              <li class="nav-item">
+                <router-link class="nav-link active"  to="/manager">Your restaurant</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link active"  to="/manager/restaurantorders">All orders</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link active"  to="/manager/customers">Our customers</router-link>
+              </li>
+            </div>
             <div v-if="role === 'Admin'" class="navbar-nav me-auto mb-2 mb-lg-0 ">
               <li class="nav-item">
                 <router-link class="nav-link active"  to="/admin">All users</router-link>
@@ -81,8 +92,11 @@ module.exports=
         },
         getRole: function (){
           if(!localStorage.jws){
-            return
+            this.$router.push('/')
+            return;
           }
+          console.log(localStorage.jws)
+          console.log('Ipak ima jws???')
           axios.get('/user/role', {headers: {'Authorization': 'Bearer' + localStorage.jws}}).then(r => this.role = r.data);
         },
         logout: function () {

@@ -4,12 +4,13 @@ public class Article {
     private String name;
     private double price;
     private ArticleType articleType; //moze se i korisiti bool jer imamo samo pice hrana
-    private Restaurant restaurant;
+    private Integer restaurant;
     private double quantity;
     private String description;
     private String logo;
+    private boolean deleted;
 
-    public Article(String name, double price, ArticleType articleType, Restaurant restaurant, double quantity, String description, String logo) {
+    public Article(String name, double price, ArticleType articleType, double quantity, String description, String logo, Integer restaurant) {
         this.name = name;
         this.price = price;
         this.articleType = articleType;
@@ -17,6 +18,15 @@ public class Article {
         this.quantity = quantity;
         this.description = description;
         this.logo = logo;
+        this.deleted = false;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 
     public String getName() {
@@ -43,11 +53,11 @@ public class Article {
         this.articleType = articleType;
     }
 
-    public Restaurant getRestaurant() {
+    public Integer getRestaurant() {
         return restaurant;
     }
 
-    public void setRestaurant(Restaurant restaurant) {
+    public void setRestaurant(Integer restaurant) {
         this.restaurant = restaurant;
     }
 
