@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Runeterra's food emporium</title>
+
+</head>
+<body>
+<div id="app">
+    <router-view></router-view>
+</div>
+
+<script src ="frontLib/moment.js"></script>
+<script src ="frontLib/vuex.js"></script>
+
+<script src="frontLib/vue.js"></script>
+<script src="frontLib/vue-router.js"></script>
+<script src="frontLib/axios.js"></script>
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous" />
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js" integrity="sha384-eMNCOe7tC1doHpGoWe/6oMVemdAVTMs2xqW4mwXrXsW0L84Iytr2wi5v2QjrP/xp" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.min.js" integrity="sha384-cn7l7gDp0eyniUwwAZgrzD06kc/tftFf19TOAs2zVinnD/C7E91j9yyk5//jjpt/" crossorigin="anonymous"></script>
+<script src="frontLib/httpVueLoader.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+<script src="frontLib/toast.js"></script>
+</body>
+<script>
+
+    Vue.component('custom-nav-bar', httpVueLoader('Components/NavBar.vue'));
+    Vue.component('geosearch', httpVueLoader('Components/GeoSearch.vue'))
+    Vue.use(Vuex);
+    const routes = [
+        {
+            path: '/',
+            beforeEnter: (to, from, next) => {
+                if(localStorage.jws) {
+                    axios.get('/user/role', {headers:{'Authorization': 'Bearer' + localStorage.jws}})
+                    .then(r => {
+                        if(r.data == 'Regular'){
+                            next({name: 'Home'});
+                        }else if(r.data == 'Admin'){
+                            next({path: '/admin'});
+                        }else if(r.data == 'Manager'){
+                            next({path: '/manager'});
+                        }else{
+                            next({name: 'Home'});
+                        }
+                    }).catch(()=> next({name:'Home'}));
+                    next({name: 'Home'});
+                } else {
+                    next({name: 'RestaurantsView'});
+                }
+            },
+        },
+
+
+                {
+                    path: '/home',
+                    name: 'Home',
+                    component: httpVueLoader('views/Home.vue'),
+                },
+        {
+            path: '/restaurant/:name',
+            name: 'Restaurant',
+            component: httpVueLoader('views/RestaurantView.vue'),
+        },
+        {
+          path: '/orders',
+          name: 'Orders',
+          component: httpVueLoader('views/Orders.vue'),
+        },
+        {
+          path: '/cart',
+          name: 'Cart',
+            component: httpVueLoader('views/Cart.vue'),
+        },
+        {
+            path: '/order/:name',
+            name: 'Order',
+            component: httpVueLoader('views/Order.vue'),
+        },
+        {
+            path: '/signin',
+            name: 'Signin',
+            component: httpVueLoader('views/Signin.vue'),
+        },
+        {
+            path: '/profile',
+            name: 'Profile',
+            component: httpVueLoader('views/Profile.vue'),
+        },
+        {
+            path:'/admin',
+            component: httpVueLoader('views/Admin.vue'),
+            children:[
+                {
+                    path:'',
+                    name: 'UsersViewAdmin',
+                    component: httpVueLoader('views/UsersViewAdmin.vue'),
+                },
+                {
+                  path: 'newrestaurant',
+                  name: 'NewRestaurant',
+                  component:  httpVueLoader('views/NewRestaurant.vue'),
+                },
+                {
+                    path: 'newuser',
+                    name: 'NewUser',
+                    component: httpVueLoader('views/NewUser.vue'),
+                },
+            ],
+        },
+        {
+            path:'/manager',
+            component: httpVueLoader('views/Manager.vue'),
+            children:[
+                {
+                    path:'',
+                    name: 'ManagerRestaurant',
+                    component: httpVueLoader('views/ManagerRestaurant.vue'),
+                },
+                {
+                    path:'newarticle',
+                    name: 'ManagerNewArticle',
+                    component: httpVueLoader('views/ManagerNewArticle.vue'),
+                },
+                {
+                    path: 'restaurantorders',
+                    name: 'RestaurantOrders',
+                    component:  httpVueLoader('views/RestaurantOrders.vue'),
+                },
+                {
+                  path: 'requests',
+                    name: 'ManagerRequests',
+                    component: httpVueLoader('views/ManagerRequests.vue'),
+                },
+                {
+                    path: 'customers',
+                    name: 'Customers',
+                    component: httpVueLoader('views/Customers.vue'),
+                },
+            ],
+        },
+        {
+            path: '/register',
+            name: 'Register',
+            component: httpVueLoader('views/Registration.vue')
+        },
+        {
+          path: '/restaurants',
+          name: 'RestaurantsView',
+          component: httpVueLoader('views/RestaurantsView.vue')
+        },
+
+
+    ];
+    const store = new Vuex.Store({
+        state:{
+            selectedRestaurant: ''
+        },
+        mutations:{
+            changeRestaurant(state, restaurant){
+                state.selectedRestaurant = restaurant;
+            }
+        }
+    })
+    const router = new VueRouter({
+
+        routes: routes,
+    })
+
+    new Vue({
+        el: '#app',
+        router: router,
+        store: store,
+        methods: {
+
+        }
+    }).$mount('#app')
+</script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/css/ol.css" type="text/css">
+<script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.7.0/build/ol.js"></script>
+
+</html>
