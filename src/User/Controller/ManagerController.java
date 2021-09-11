@@ -36,6 +36,72 @@ public class ManagerController {
         this.userService = userService;
         this.restaurantService = restaurantService;
         this.orderService = orderService;
+
+        get("/manager/isowner/:name", (req, res) -> {
+            try {
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()) {
+                    return forbidden(res);
+                }
+                Manager m = (Manager) u.get();
+                if(m.getRestaurant() == null) {
+                    return badRequest("Not owner", res);
+                }
+                String name = req.params(":name");
+                if(name.isBlank()) {
+                    return badRequest("Invalid name", res);
+                }
+                return m.getRestaurant().getName().equals(name)
+                        ? ok("Is owner", res)
+                        : badRequest("Not owner", res);
+            } catch (Exception e) {
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+
+        post("/manager/comment/decline", (req,res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String id = req.body();
+                if(id == null || id.isBlank()){
+                    return badRequest("BAD!",res);
+                }
+                Integer intID = Integer.parseInt(id);
+                return userService.declineComment(intID)
+                        ?ok("Super", res)
+                        : badRequest("Au buraz", res);
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+        post("/manager/comment/approve", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String id = req.body();
+                if(id == null || id.isBlank()){
+                    return badRequest("BAD!",res);
+                }
+                Integer intID = Integer.parseInt(id);
+                return userService.approveComment((Manager) u.get(), intID)
+                        ? ok("kk",res)
+                        : badRequest("Badreq",res);
+
+
+            }catch (Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+
+
         get("/manager/requests", (req, res) -> {
             try{
                 Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);

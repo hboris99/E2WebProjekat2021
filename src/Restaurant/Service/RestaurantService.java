@@ -125,4 +125,8 @@ public class RestaurantService {
         }
         return r.get().getArticleList().stream().filter(a -> !a.isDeleted()).collect(Collectors.toList());
     }
+
+    public boolean updateRest(Restaurant restaurant) {
+            return restaurantRepository.Update(restaurant);
+    }
 }

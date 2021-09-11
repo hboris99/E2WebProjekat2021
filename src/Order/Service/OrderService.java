@@ -100,4 +100,9 @@ public class OrderService {
                 (o1, o2) -> o1)).keySet().stream().collect(Collectors.toList());
 
     }
+
+    public boolean hasDeliveredOrder(String username, String name) {
+        return orderRepository.getAll().stream().filter(o -> o.getUsername().equals(username)
+        && o.getStats().equals(OrderStatusType.Delivered) && o.getRestaurant().getName().equals(name)).findFirst().isPresent();
+    }
 }

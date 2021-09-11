@@ -1,5 +1,7 @@
 package User.Controller;
 
+import Comments.DTO.CommentReq;
+import Comments.Service.CommentService;
 import Order.Model.Order;
 import Order.Service.OrderService;
 import User.DTO.*;
@@ -39,9 +41,74 @@ public class UserController {
 
     private UserService userService;
     private OrderService orderService;
-    public UserController(UserService userService, OrderService orderService){
+    private CommentService commentService;
+    public UserController(UserService userService, OrderService orderService, CommentService commentService){
         this.userService = userService;
         this.orderService= orderService;
+        this.commentService = commentService;
+        get("/user/cancomment/:name", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Buyer);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String name = req.params(":name");
+                if(name == null || name.isBlank()){
+                    return badRequest("Lose", res);
+                }
+                return orderService.hasDeliveredOrder(u.get().getUsername(), name)
+                        ? ok("Ok", res)
+                        : badRequest("Bad", res);
+
+            }catch (Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+
+        get("/owner/:name/comment",(req, res) -> {
+            try {
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Manager);
+                if(!u.isPresent()) {
+                    u = userService.validateJWT(req, UserRoleType.Admin);
+                    if(!u.isPresent()) {
+                        return forbidden(res);
+                    }
+                }
+
+                String restName = req.params(":name");
+                if(restName == null || restName.isBlank()) {
+                    return badRequest("Bad request", res);
+                }
+
+                return gson.toJson(commentService.getOwnerComments(restName));
+            } catch(Exception e) {
+                return internal(res);
+            }
+        });
+        post("/user/comment/:name", (req, res) -> {
+            try{
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Buyer);
+                if(!u.isPresent()){
+                    return forbidden(res);
+                }
+                String name = req.params(":name");
+                if(name == null || name.isBlank()){
+                    return badRequest("Lose", res);
+                }
+
+                CommentReq cr = gson.fromJson(req.body(), CommentReq.class);
+
+                return userService.addComment((Buyer) u.get(), cr, name)
+                        ?ok("Posted", res)
+                        :badRequest("Bad", res);
+
+            }catch(Exception e){
+                e.printStackTrace();
+                return internal(res);
+            }
+        });
+
 
 
         get("/user/role", (req, res) -> {

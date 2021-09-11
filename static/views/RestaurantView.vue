@@ -10,7 +10,7 @@
 
     <h2>{{restaurant.name}}</h2>
     <b :class="restaurant.working == true ? 'open' : 'closed'">{{restaurant.working}}</b></div>
-      <button v-if="isRegular && restaurant.working == true"><router-link :to="'/order/' + restaurant.name ">Place an order!</router-link></button>
+      <button v-if="isBuyer && restaurant.working == true"><router-link :to="'/order/' + restaurant.name ">Place an order!</router-link></button>
     </div>
     <div id="location">
       <h2>Where you can find us</h2>
@@ -56,6 +56,36 @@
     </div>
   </div>
     </div>
+    <div id="comments">
+      <div class="comments">
+        <div v-for="comment in comments" :key="comment.id" class="comment">
+          <div class="comment-container"> <div class="comment-info">
+            <h3>{{comment.username}}</h3>
+            <b>{{comment.rating}}/5.0</b>
+            <b v-if="isManager" :class="comment.status">{{comment.status}}</b>
+            <p>{{comment.content}}</p>
+          </div>
+            <div class="spacer"></div>
+            <img :src="'http://localhost:8080/image/' + comment.userImage" alt="commenter pic">
+          </div>
+          <div v-if="(isManager || isAdmin)" class="comment-actions">
+            <button class="button-approve" v-if="isManager && comment.status == 'Pending'" @click="approveComment(comment.id)">Approve</button>
+            <div class="spacer"></div>
+            <button class="button-deny" v-if="isManager && comment.status == 'Pending'" @click="declineComment(comment.id)">Deny</button>
+            <button class="button-deny" v-if="isAdmin" @click="deleteComment(comment.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+      <div v-if="allowedToComment" id="review-container">
+        <h3>Share your thoughts</h3>
+        <label>Rating: </label>
+        <b>{{review.rating}} / 5</b>
+        <input type="range" min="1" max="5" v-model="review.rating"/>
+        <textarea view="review.body" cols="30" rows="10" v-model="review.content"></textarea>
+        <button @click="postComment">Add review</button>
+      </div>
+
+    </div>
   </div>
 </div>
 </template>
@@ -67,13 +97,93 @@ module.exports = {
         restaurantName: '',
         restaurant: '',
         articles:[],
+        comments: [],
         map: null,
-        isAdmin:'',
-        isManager: '',
-        isRegular: '',
+        allowedToComment: false,
+        isManager: false,
+        isAdmin: false,
+        review: {
+          rating: '',
+          content:'',
+        },
+        isManager: false,
+        isAdmin: false,
+        isBuyer: false,
+
 
       }
   },methods:{
+    approveComment: function(id) {
+      if(!localStorage.jws) {
+        this.$route.push('/');
+        return;
+      }
+      axios.post('/manager/comment/approve', id, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(() => this.$router.go(0))
+          .catch(r => console.log(r));
+    },
+    declineComment: function(id) {
+      if(!localStorage.jws) {
+        this.$route.push('/');
+        return;
+      }
+      axios.post('/manager/comment/decline', id, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(() => this.$router.go(0))
+          .catch(r => console.log(r));
+    },
+    deleteComment: function(id) {
+      if(!localStorage.jws) {
+        this.$route.push('/');
+        return;
+      }
+      console.log(id);
+      axios.delete('/admin/comment/' + id, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(() => this.$router.go(0))
+          .catch(r => console.log(r));
+    },
+    getOwnerComments: function() {
+      if(!localStorage.jws) {
+        this.$route.push('/');
+        return;
+      }
+      axios.get('/owner/' + this.$route.params.name + '/comment', {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(r => this.comments.push(...r.data))
+          .catch(r => console.log(r));
+    },
+    getComments: function() {
+      axios.get('/restaurant/' + this.$route.params.name + '/comment')
+          .then(r => {
+            {
+              this.comments = [...r.data]
+              console.log(this.comments);
+              console.log(this.comments[0].name)
+            }
+          })
+          .catch(r => console.log(r));
+    },
+    postComment: function() {
+      if(!localStorage.jws) {
+        this.$router.push('/');
+        return;
+      }
+      console.log(this.review)
+      axios.post('/user/comment/' + this.$route.params.name, this.review, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(() => this.$router.go(0))
+          .catch(r => console.log(r));
+    },
+
+    canComment: function() {
+      if(!localStorage.jws) {
+        return;
+      }
+      axios.get('/user/cancomment/' + this.$route.params.name, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+          .then(() => {
+            this.allowedToComment = true;
+          })
+          .catch(() => {
+            this.allowedToComment = false;
+          });
+    },
 
     getRestaurant: async function() {
       let name = this.$route.params.name;
@@ -87,15 +197,23 @@ module.exports = {
           .then(r => {
             if(r.data == 'Admin') {
               this.isAdmin = true;
+              this.getOwnerComments();
             }
             if(r.data == 'Manager') {
               if(!localStorage.jws) {
                 return;
               }
-              this.isManager = true;
+              console.log('Usao je u menadzera')
+              axios.get('/manager/isowner/' + this.$route.params.name, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
+                  .then(() => {
+                    this.isManager = true;
+                    console.log(this.isManager)
+                    this.getOwnerComments();
+                  });
+              console.log(this.isManager)
             }
             if(r.data == 'Buyer') {
-              this.isRegular = true;
+              this.isBuyer = true;
               this.isManager = false;
               this.isAdmin = false;
             }
@@ -105,13 +223,15 @@ module.exports = {
   },
 
   mounted(){
+    this.getComments();
+    this.canComment();
     this.getRole();
+    console.log(this.isManager)
     this.getRestaurant().then(r  => {
       this.restaurant = r.data;
       this.articles = this.restaurant.articleList;
 
-      console.log(this.restaurant)
-      console.log(this.articles)
+
       this.map = new ol.Map({
         target: 'mapElement',
         layers: [
@@ -142,8 +262,7 @@ module.exports = {
           features: [ restPointer,
           ]})});
       this.map.addLayer(layer);
-      console.log(layer);
-      console.log(this.map);
+
 
     }).catch(r => console.log(r));
 
@@ -177,4 +296,66 @@ img{
   width: 150px;
   height: 150px;
 }
+#comments h2 {
+  color: #666;
+  border-bottom: solid 1px #eee;
+}
+.comments {
+  height: 400px;
+  overflow: auto;
+}
+.comment-container {
+  display: flex;
+  flex-direction: row;
+  /* width: 400px; */
+}
+.comment {
+  border-bottom: solid 1px #eee;
+  padding: 5px;
+}
+.comment-container img {
+  width: 128px;
+  height: 128px;
+}
+.comment-info {
+  display: flex;
+  flex-direction: column;
+}
+.comment-info b {
+  text-transform: uppercase;
+}
+.comment-info h3 {
+  font-size: 2.5rem;
+}
+.comment-actions {
+  display: flex;
+  flex-direction: row;
+}
+.approved {
+  color: #2ecc71;
+}
+.button-approve {
+  color: #fff;
+  background-color: #2ecc71;
+}
+.button-deny {
+  color: #fff;
+  background-color: #e74c3c;
+}
+.pending {
+  color: #666;
+}
+.denied {
+  color: #e74c3c;
+}
+#review-container {
+  display: flex;
+  flex-direction: column;
+}
+#review-container h3 {
+  margin-top: 20px;
+  font-size: 2.5rem;
+  color: #666;
+}
+
 </style>

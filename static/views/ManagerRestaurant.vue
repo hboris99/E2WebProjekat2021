@@ -123,8 +123,12 @@
 
     </div>
   </div>
-  </div>
-    </div>
+
+
+        </div>
+
+      </div>
+
 
 </template>
 
@@ -145,6 +149,8 @@ data: function(){
 },
 
   methods:{
+
+
     selectFile: function (){
       let file = this.$refs.file.files[0]
       this.fileUrl = URL.createObjectURL(file);
@@ -213,6 +219,7 @@ data: function(){
       })
       .catch(r => console.log(r))
     },
+
   getRestaurant: function (){
     if(!localStorage.jws){
       this.$router.push('/')
@@ -235,7 +242,8 @@ data: function(){
   },
   mounted(){
 
-  this.getRestaurant();
+
+    this.getRestaurant();
     }
 }
 </script>

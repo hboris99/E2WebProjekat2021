@@ -38,6 +38,28 @@ public class AdminController {
         this.userService = userService;
         this.restaurantService = restaurantService;
 
+        delete("/admin/comment/:id", (req, res) -> {
+            try {
+                Optional<User> u = userService.validateJWT(req, UserRoleType.Admin);
+                if(!u.isPresent()) {
+                    return forbidden(res);
+                }
+
+                String idstr = req.params(":id");
+                if(idstr == null || idstr.isBlank()) {
+                    return badRequest("Not deleted", res);
+                }
+
+                Integer id = Integer.parseInt(idstr);
+
+                return userService.deleteComment(id)
+                        ? ok("Deleted", res)
+                        : badRequest("Not deleted", res);
+            } catch(Exception e) {
+                return internal(res);
+            }
+        });
+
         get("/admin/users", (req, res) ->{
 
                 Optional<User> user = userService.validateJWT(req, UserRoleType.Admin);

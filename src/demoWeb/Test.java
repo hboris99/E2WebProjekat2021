@@ -7,7 +7,10 @@ import static spark.Spark.webSocket;
 
 import java.io.File;
 import java.util.Date;
+import java.util.concurrent.CompletionException;
 
+import Comments.Repository.CommentRepository;
+import Comments.Service.CommentService;
 import Order.Repository.OrderRepository;
 import Order.Service.OrderService;
 import Restaurant.Controller.RestaurantController;
@@ -50,17 +53,19 @@ public class Test {
         UserRepository userRepository = new UserRepository("users.json");
         RestaurantRepository restaurantRepository = new RestaurantRepository("restoraunts.json");
         OrderRepository orderRepository = new OrderRepository("orders.json");
+        CommentRepository commentRepository = new CommentRepository("comments.json");
         OrderService orderService = new OrderService(orderRepository);
         RestaurantService restaurantService = new RestaurantService(restaurantRepository);
-        UserService userService = new UserService(userRepository, restaurantService, orderService);
+        CommentService commentService = new CommentService(commentRepository);
+        UserService userService = new UserService(userRepository, restaurantService, orderService, commentService);
 
         //userRepository.LoadAdminUsers("adminUsers.json");
         DelivererController delivererController = new DelivererController(userService, orderService);
-        RestaurantController restaurantController = new RestaurantController(restaurantService);
+        RestaurantController restaurantController = new RestaurantController(restaurantService, commentService);
         ImageController imageController = new ImageController(UPLOAD_DIR);
         ManagerController managerController = new ManagerController(userService, restaurantService,orderService);
         AdminController adminController = new AdminController(userService, restaurantService);
-        UserController userController = new UserController(userService,orderService);
+        UserController userController = new UserController(userService,orderService,commentService);
        
     }
 

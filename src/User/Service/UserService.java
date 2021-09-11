@@ -1,5 +1,7 @@
 package User.Service;
 
+import Comments.DTO.CommentReq;
+import Comments.Service.CommentService;
 import Order.Model.Order;
 import Order.Model.OrderStatusType;
 import Order.Service.OrderService;
@@ -31,9 +33,10 @@ public class UserService {
     private UserRepository userRepository;
     private RestaurantService restaurantService;
     private OrderService orderService;
+    private CommentService commentService;
 
-    public UserService(UserRepository userRepository, RestaurantService restaurantService, OrderService orderService){
-
+    public UserService(UserRepository userRepository, RestaurantService restaurantService, OrderService orderService, CommentService commentService){
+        this.commentService = commentService;
         this.restaurantService = restaurantService;
         this.userRepository = userRepository;
         this.orderService = orderService;
@@ -299,5 +302,37 @@ public class UserService {
         return orderService.getRestaurantCustomerUsernames(r.getName()).stream().flatMap(u -> getAllUsers().stream()
         .filter(us -> us.getUsername().equals(u))
         .map(user-> (Buyer) user)).collect(Collectors.toList());
+    }
+
+    public boolean addComment(Buyer buyer, CommentReq cr, String name) {
+        if(!orderService.hasDeliveredOrder(buyer.getUsername(), name)){
+            return false;
+        }
+        Optional<Restaurant> r = restaurantService.getByName(name);
+        if(!r.isPresent()){
+            return false;
+        }
+
+        return commentService.create(buyer.getUsername(), name, cr.getContent(), cr.getRating(), buyer.getProfileImage());
+    }
+
+    public boolean approveComment(Manager manager, Integer intID) {
+        float restavg = commentService.approve(intID, manager.getRestaurant().getName());
+        if(restavg<0){
+            return false;
+        }
+        manager.getRestaurant().setAvgPoints(restavg);
+        Optional<Restaurant> r = restaurantService.getByName(manager.getRestaurant().getName());
+        r.get().setAvgPoints(restavg);
+        return userRepository.Update(manager) && restaurantService.updateRest(r.get());
+
+    }
+
+    public boolean declineComment(Integer intID) {
+        return commentService.decline(intID);
+    }
+
+    public boolean deleteComment(Integer id) {
+        return commentService.delete(id);
     }
 }
