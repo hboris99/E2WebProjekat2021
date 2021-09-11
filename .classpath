@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="/demoIntelliJWeb/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/lib"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/bootstrap"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/all"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/@popperjs/core"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/ol"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

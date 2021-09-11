@@ -2,13 +2,17 @@
   <div>
   <custom-nav-bar>
   </custom-nav-bar>
-  <div>
+    <div id="order-main">
+      <div id="order-container">
+        <div id="articles-select">
   <h2> Choose your article</h2>
-    <div v-for="article in articles" :key="article.name" class="article">
+          <div id="articles-container">
+
+          <div v-for="article in articles" :key="article.name" class="article">
       <div :class="article.selected ? 'article-info selected' : 'article-info'">
         <div @click="article.selected = !article.selected" class="article-header">
           <h3>
-            {{article.name}} ({{article.quantity}} <span v-if="article.articleType == 'FOOD'">g</span> <span v-else>ml</span>)
+            {{article.name}} ({{article.quantity}} <span v-if="article.articleType == 'Food'">g</span> <span v-else>ml</span>)
           </h3>
           <p>{{article.description}}</p>
         </div>
@@ -34,8 +38,13 @@
     <span v-if="discount" class="discount">(-{{discount}} %)</span>
   </div>
     <div>
+      <div class="spacer"></div>
+
       <button class="btn btn-primary" :disabled="totalPrice<=0" @click="addToCart">Add to cart</button>
     </div>
+  </div>
+    </div>
+  </div>
   </div>
 </template>
 
@@ -114,5 +123,88 @@ module.exports = {
 </script>
 
 <style scoped>
+#order-main {
+  display: grid;
+  place-items: center;
+  height: 87vh;
+}
+#order-container {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: solid 1px #eee;
+  padding: 10px;
+}
+#articles-select {
+  display: flex;
+  flex-direction: column;
+  height: 60vh;
+}
+#articles-select h2 {
+  color: #666;
+  margin-bottom: 10px;
+}
+#articles-container {
+  height: 400px;
+  overflow: auto;
+}
+.article {
+  display: flex;
+  flex-direction: row;
+  padding: 5px;
+  /* width: 400px; */
+  border-bottom: solid 1px #eee;
+}
+.article-header {
+  cursor: pointer;
+}
+.selected {
+  background: #eee;
+}
 
+.article img {
+  width: 128px;
+  height: 128px;
+}
+.article-info {
+  width: 320px;
+}
+.article-info h3 {
+  font-size: 2.5rem;
+}
+.price-and-amount {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 10px;
+}
+.price-and-amount input {
+  width: 80px;
+}
+#total-select {
+  display: flex;
+  flex-direction: row;
+}
+button:disabled {
+  background: #eee;
+}
+#preview-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+#order-info {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  text-align: right;
+}
+#order-info div {
+  display: flex;
+  flex-direction: row;
+}
+.discount {
+  color: #2ecc71;
+}
 </style>

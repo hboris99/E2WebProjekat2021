@@ -1,7 +1,7 @@
 <template>
 <div>
   <div id="container">
-  <input type="text" class="form-control" @keyup="search" placeholder="Search location" v-model="query">
+  <input type="text" class="form-control" @keyup="search" style="width: 200px" placeholder="Search location" v-model="query">
   <div v-if="results.length > 0"  id="results">
     <div v-for="r in results" :key="r.place_id" @click="select(r)" class="result">{{r.display_name}}</div>
   </div>

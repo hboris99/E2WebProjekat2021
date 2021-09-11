@@ -24,6 +24,12 @@
       </div>
 
       <div v-if="updateArticleForm">
+        <p v-if="articleErrors.length">
+          <b>Please correct the following error(s):</b>
+        <ul>
+          <li v-for="error in articleErrors">{{ error }}</li>
+        </ul>
+        </p>
         <div id="mainviewArticle">
           <div id="newArticleForm">
             <form class="row g-3 needs-validation" @submit="updateSelectedArticle">
@@ -69,9 +75,11 @@
       </div>
 
 
+
+          <div class="container-fluid content-row">
           <div class="row row-cols-1 row-cols-3 g-2" v-if="!updateArticleForm && !noArticle">
             <div v-for="article in articleList">
-                <div v-if="article.deleted == true" class="card  text-white bg-danger">
+                <div v-if="article.deleted == true" class="card h-100 text-white bg-danger">
                   <img  :src="'http://localhost:8080/image/' + article.logo" class="card-img-top h-100 w-100" alt="...">
                   <div class="card-body">
                     <h5 class="card-title">{{article.name}}</h5>
@@ -84,7 +92,7 @@
                     </div>
                   </div>
                 </div>
-            <div v-if="article.articleType == 'Food' && article.deleted == false" class="card  text-white bg-primary">
+            <div v-if="article.articleType == 'Food' && article.deleted == false" class="card h-100 text-white bg-primary">
                 <img  :src="'http://localhost:8080/image/' + article.logo" class="card-img-top h-100 w-100" alt="...">
              <div class="card-body">
                 <h5 class="card-title">{{article.name}}</h5>
@@ -97,7 +105,7 @@
                 </div>
               </div>
               </div>
-              <div v-if="article.articleType == 'Drink' && article.deleted == false" class="card  text-white bg-secondary">
+              <div v-if="article.articleType == 'Drink' && article.deleted == false" class="card h-100 text-white bg-secondary">
                 <img  :src="'http://localhost:8080/image/' + article.logo" class="card-img-top h-100 w-100" alt="...">
                 <div class="card-body">
                   <h5 class="card-title">{{article.name}}</h5>
@@ -121,14 +129,14 @@
 
 
 
-    </div>
-  </div>
+                  </div>
+              </div>
 
 
         </div>
 
       </div>
-
+  </div>
 
 </template>
 
@@ -143,6 +151,7 @@ data: function(){
     articleToUpdate: null,
     fileUrl: '',
     file: '',
+    articleErrors: [],
 
   }
 
@@ -156,11 +165,30 @@ data: function(){
       this.fileUrl = URL.createObjectURL(file);
       this.file = file;
     },
+    validate: function (){
+      if(!this.articleToUpdate.name){
+        this.articleErrors.push('Please enter a name')
+      }
+      if(!this.articleToUpdate.price){
+        this.articleErrors.push('Please enter a price')
+      }if(!this.articleToUpdate.articleType){
+        this.articleErrors.push('Please enter the type')
+      }if(!this.articleToUpdate.quantity){
+        this.articleErrors.push('Please enter a quantity')
+      }if(!this.articleToUpdate.description){
+        this.articleErrors.push('Please enter a description')
+      }
+    },
     updateSelectedArticle:  function (){
       if(!localStorage.jws){
         this.$router.push('/')
         return;
       }
+      this.validate();
+      if(this.errors.len != 0){
+        return;
+      }
+
       let data = new FormData();
       let req = {
         name: this.articleToUpdate.name,

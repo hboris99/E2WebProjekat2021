@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<eclipse-userlibraries>
+  <library name="lib">
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/gson-2.2.2.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/javaxt-core.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jjwt-api-0.11.1.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jjwt-gson-0.11.1.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jjwt-impl-0.11.1.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/slf4j-api-1.7.13.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/slf4j-api-1.7.21.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/spark-core-2.5.5.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/slf4j-simple-1.7.21.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/javax.servlet-api-3.1.0.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-io-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-xml-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-http-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-util-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-server-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-webapp-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-servlet-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/websocket-api-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/jetty-security-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/websocket-client-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/websocket-common-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/websocket-server-9.3.6.v20151106.jar" />
+    <archive path="C:/Users/horva/Desktop/demoIntelliJWeb/E2WebProjekat2021/lib/websocket-servlet-9.3.6.v20151106.jar" />
+  </library>
+  <library name="@popperjs/core">
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_npm_@popperjs_core@2.9.3_dist_umd_popper.js" />
+  </library>
+  <library name="all">
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_use.fontawesome.com_releases_v5.7.2_css_all.css" />
+  </library>
+  <library name="bootstrap">
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_npm_bootstrap@5.1.0_dist_css_bootstrap.css" />
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_npm_bootstrap@5.1.0_dist_js_bootstrap.js" />
+  </library>
+  <library name="ol">
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_gh_openlayers_openlayers.github.io@master_en_v6.6.1_build_ol.js" />
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_gh_openlayers_openlayers.github.io@master_en_v6.6.1_css_ol.css" />
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_gh_openlayers_openlayers.github.io@master_en_v6.7.0_build_ol.js" />
+    <archive path="C:/Users/horva/AppData/Roaming/JetBrains/IntelliJIdea2021.1/javascript/extLibs/http_cdn.jsdelivr.net_gh_openlayers_openlayers.github.io@master_en_v6.7.0_css_ol.css" />
+  </library>
+</eclipse-userlibraries>
+

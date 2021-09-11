@@ -9,8 +9,8 @@
 
 
     <h2>{{restaurant.name}}</h2>
-    <b :class="restaurant.working == true ? 'open' : 'closed'">{{restaurant.working}}</b></div>
-      <button v-if="isBuyer && restaurant.working == true"><router-link :to="'/order/' + restaurant.name ">Place an order!</router-link></button>
+    <b >Our average rating: {{restaurant.avgPoints}}</b></div>
+      <button class="btn btn-primary" v-if="isBuyer && restaurant.working == true"><router-link id="link" :to="'/order/' + restaurant.name ">Place an order!</router-link></button>
     </div>
     <div id="location">
       <h2>Where you can find us</h2>
@@ -95,7 +95,21 @@ module.exports = {
   data: function() {
       return{
         restaurantName: '',
-        restaurant: '',
+        restaurant: {
+          name: "Liman",
+          status: 'Open',
+          type: 'Pizzeria',
+          avgScore: 4.3,
+          restaurantLocation: {
+            lat: 45.2408613,
+            lon: 19.8360667,
+            adress:{
+              place: "Novi Sad",
+              streetAndNumber: "Sekspirova12a",
+              zipcode: 21010,
+              }
+          }
+        },
         articles:[],
         comments: [],
         map: null,
@@ -136,7 +150,6 @@ module.exports = {
         this.$route.push('/');
         return;
       }
-      console.log(id);
       axios.delete('/admin/comment/' + id, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
           .then(() => this.$router.go(0))
           .catch(r => console.log(r));
@@ -155,8 +168,7 @@ module.exports = {
           .then(r => {
             {
               this.comments = [...r.data]
-              console.log(this.comments);
-              console.log(this.comments[0].name)
+
             }
           })
           .catch(r => console.log(r));
@@ -166,7 +178,6 @@ module.exports = {
         this.$router.push('/');
         return;
       }
-      console.log(this.review)
       axios.post('/user/comment/' + this.$route.params.name, this.review, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
           .then(() => this.$router.go(0))
           .catch(r => console.log(r));
@@ -203,14 +214,12 @@ module.exports = {
               if(!localStorage.jws) {
                 return;
               }
-              console.log('Usao je u menadzera')
               axios.get('/manager/isowner/' + this.$route.params.name, {headers: {'Authorization': 'Bearer ' + localStorage.jws}})
                   .then(() => {
                     this.isManager = true;
-                    console.log(this.isManager)
                     this.getOwnerComments();
                   });
-              console.log(this.isManager)
+
             }
             if(r.data == 'Buyer') {
               this.isBuyer = true;
@@ -218,22 +227,9 @@ module.exports = {
               this.isAdmin = false;
             }
           })
-    },
-
-  },
-
-  mounted(){
-    this.getComments();
-    this.canComment();
-    this.getRole();
-    console.log(this.isManager)
-    this.getRestaurant().then(r  => {
-      this.restaurant = r.data;
-      this.articles = this.restaurant.articleList;
-
-
+    },createMap: function (){
       this.map = new ol.Map({
-        target: 'mapElement',
+        target: 'map',
         layers: [
           new ol.layer.Tile({
             source: new ol.source.OSM()
@@ -244,7 +240,6 @@ module.exports = {
           zoom: 15
         })
       });
-      console.log(this.map);
       let restPointer = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.fromLonLat([this.restaurant.restaurantLocation.longitude, this.restaurant.restaurantLocation.latitude]))
       });
@@ -252,7 +247,7 @@ module.exports = {
           new ol.style.Style({
             image: new ol.style.Icon({
               crossOrigin: 'anonymous',
-              src: 'img/pointer.png',
+              src: 'images/pointer.png',
               scale: 0.02,
             }),
           })
@@ -262,10 +257,27 @@ module.exports = {
           features: [ restPointer,
           ]})});
       this.map.addLayer(layer);
+    },
+
+  },
+
+  mounted(){
+
+    this.getComments();
+    this.canComment();
+    this.getRole();
+    this.getRestaurant().then(r  => {
+      this.restaurant = r.data;
+      this.articles = this.restaurant.articleList;
+
+
+
 
 
     }).catch(r => console.log(r));
-
+    this.$nextTick(function () {
+      this.createMap();
+    })
   },
 
 }
@@ -284,7 +296,20 @@ module.exports = {
   display: grid;
   grid-template-columns: 1fr auto;
   padding: 20px;
+}#location {
+   width: 80%;
+   margin: 0 auto;
+ }
+#location h2 {
+  color: #666;
+  border-bottom: solid 1px #eee;
 }
+#location-container {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  padding: 20px;
+}
+
 .mapElement {
   width: 400px;
   height: 400px;
@@ -348,6 +373,10 @@ img{
 .denied {
   color: #e74c3c;
 }
+#link{
+  color: white;
+  text-decoration-line: none;
+}
 #review-container {
   display: flex;
   flex-direction: column;
@@ -357,5 +386,7 @@ img{
   font-size: 2.5rem;
   color: #666;
 }
-
+#restaurantInfo{
+  position: center;
+  }
 </style>

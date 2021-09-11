@@ -30,7 +30,7 @@
 
         <div class="row row-cols-1 row-cols-3 g-2">
           <div class="col" v-for="restaurant in filteredRestaurants">
-            <div  class="card  text-white bg-dark">
+            <div  class="card  text-white bg-primary">
               <img v-if="restaurant.logo" :src="'http://localhost:8080/image/' + restaurant.logo" class="card-img-top h-100 w-100" alt="...">
               <img v-else src="images/restaurant.png" class="card-img-top h-100 w-100" alt="...">
               <div class="card-body">
@@ -38,11 +38,11 @@
                 <p class="card-text">
                   Type of restaurant: {{restaurant.restaurantType}}
                   <br>
-                  Location: {{restaurant.restaurantLocation }}
+                  Where you can find us: {{restaurant.restaurantLocation.adress.place}} {{restaurant.restaurantLocation.adress.streetAndNumber}} {{restaurant.restaurantLocation.adress.zipcode}}
                   Average review: {{restaurant.avgPoints}}
                 </p>
                 <div >
-                  <button v-if="jws"  class="btn btn-secondary"><router-link :to="'/restaurant/' + restaurant.name">More details</router-link></button>
+                  <button v-if="jws"  class="btn btn-light"><router-link id="link" :to="'/restaurant/' + restaurant.name">More details</router-link></button>
               </div>
             </div>
             </div>
@@ -149,5 +149,8 @@ module.exports=
 </script>
 
 <style scoped>
-
+#link{
+  color: cornflowerblue;
+  text-decoration-line: none;
+}
 </style>

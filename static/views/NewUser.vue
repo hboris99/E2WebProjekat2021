@@ -3,9 +3,16 @@
   <custom-nav-bar>
   </custom-nav-bar>
   <div id="mainwindow">
+    <h3>Dodajte novog korisnika</h3>
+    <p v-if="errors.length">
+      <b>Please correct the following error(s):</b>
+    <ul>
+      <li v-for="error in errors">{{ error }}</li>
+    </ul>
+    </p>
   <div id="newuserreg">
-  <div class="d-flex justify-content-between">
-    <Geosearch></Geosearch>
+
+    <div class="d-flex justify-content-between">
     <form class="row g-3 needs-validation" @submit="newUser" id="sign-in-form" novalidate>
       <div class="form-floating">
         <input class="form-control" placeholder="Username" id="form-name-input" v-model="username" type="text">
@@ -67,14 +74,37 @@ module.exports= {
       gender: '',
       birthDate: '',
       profileImage: '',
+      errors: [],
     }
   },
   methods: {
-    newUser: function (){
+    validate: function (){
+      this.errors = []
+      if(!this.username){
+        this.errors.push('Please enter a username')
+      }if(!this.password){
+        this.errors.push('Please enter a password')
+      }if(!this.name){
+        this.errors.push('Please enter a name')
+      }if(!this.surname){
+        this.errors.push('Please enter a surname')
+      }if(!this.gender){
+        this.errors.push('Please enter a gender')
+      }if(!this.birthDate){
+        this.errors.push('Please enter a birth date')
+      }
+
+    },
+    newUser: function (e){
         if(!localStorage.jws){
           this.$router.push('/');
           return;
         }
+        this.validate()
+        if(this.errors.length != 0){
+          return;
+        }
+        e.preventDefault()
         let request = {
           username: this.username,
           password: this.password,
@@ -100,7 +130,7 @@ module.exports= {
 #mainwindow{
   display: grid;
   place-items: center;
-  height: 100vh;
+  height: 70vh;
 }
 #newuserreg{
   display: grid;
